@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { programs, toneChip } from "@/lib/mrc-data";
+import { InquiryForm } from "@/components/inquiry-form";
 
 export const Route = createFileRoute("/programs/$slug")({
   loader: ({ params }) => {
@@ -42,8 +43,24 @@ function ProgramPage() {
             <li key={pt} className={`${p.dark ? "border border-border/20" : "glass"} rounded-xl p-4 text-sm`}>{pt}</li>
           ))}
         </ul>
-        <button className={`${p.dark ? "btn-light" : "btn-ink"} mt-8`}>{p.cta}</button>
-        <p className={`mt-3 text-xs ${p.dark ? "opacity-60" : "text-muted-foreground"}`}>Sign-up opens soon.</p>
+        <div className="mt-10">
+          {p.slug === "reading-challenge" ? (
+            <Link to="/dashboard" className="btn-ink">{p.cta}</Link>
+          ) : p.slug === "midnight-spikes" ? (
+            <Link to="/spikes" className="btn-ink">{p.cta}</Link>
+          ) : (
+            <>
+              {p.slug === "author-services" && (
+                <Link to="/submit" className="btn-ink mb-6">Submit your book</Link>
+              )}
+              <h2 className="font-serif text-xl font-semibold">{p.slug === "author-services" ? "Ask about a service" : "Register your interest"}</h2>
+              <p className={`mb-4 mt-1 text-sm ${p.dark ? "opacity-70" : "text-muted-foreground"}`}>
+                {p.access === "For authors" ? "Tell us about your book and which service you need." : "Online payment opens soon — leave your details and we'll email you first."}
+              </p>
+              <InquiryForm program={p.slug} cta={p.cta} dark={p.dark} />
+            </>
+          )}
+        </div>
       </div>
     </section>
   );
