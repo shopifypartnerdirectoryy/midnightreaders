@@ -42,7 +42,7 @@ function ProgramPage() {
             <li key={pt} className={`${p.dark ? "border border-border/20" : "glass"} rounded-xl p-4 text-sm`}>{pt}</li>
           ))}
         </ul>
-        <button className={`${p.dark ? "btn-glass text-foreground" : "btn-ink"} mt-8`}>{p.cta}</button>
+        <button className={`${p.dark ? "btn-light" : "btn-ink"} mt-8`}>{p.cta}</button>
         <p className={`mt-3 text-xs ${p.dark ? "opacity-60" : "text-muted-foreground"}`}>Sign-up opens soon.</p>
       </div>
     </section>

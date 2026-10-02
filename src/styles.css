@@ -170,3 +170,7 @@
   .btn-glass { display: inline-flex; border-radius: 9999px; border: 1px solid var(--input); background: oklch(1 0 0 / 60%); padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; transition: background .2s; }
   .btn-glass:hover { background: oklch(1 0 0); }
 }
+@layer components {
+  .btn-light { display: inline-flex; border-radius: 9999px; background: var(--primary-foreground); color: var(--primary); padding: 0.75rem 1.5rem; font-size: 0.875rem; font-weight: 600; transition: transform .2s; }
+  .btn-light:hover { transform: translateY(-2px); }
+}

@@ -130,7 +130,7 @@ function Index() {
             <h2 className="mt-2 font-serif text-3xl font-semibold">After Dark</h2>
             <p className="mt-2 max-w-lg opacity-75">Members-only sessions, deep-dive guides and early access to featured titles.</p>
           </div>
-          <Link to="/programs/$slug" params={{ slug: "after-dark" }} className="btn-glass text-foreground">Enter After Dark</Link>
+          <Link to="/programs/$slug" params={{ slug: "after-dark" }} className="btn-light">Enter After Dark</Link>
         </div>
       </section>
     </>
