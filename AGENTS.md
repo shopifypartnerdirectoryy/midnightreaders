@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Program content lives in src/lib/mrc-data.ts and renders via /programs/$slug — keeps one template for all programs.
+- Glass surfaces use .glass/.glass-lg/.glass-ink and .btn-* classes in styles.css — keeps the look consistent.
