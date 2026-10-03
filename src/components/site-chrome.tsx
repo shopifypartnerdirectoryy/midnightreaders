@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
 
-const legal = [
+const legal: [string, string][] = [
   ["terms", "Terms"], ["privacy", "Privacy"], ["challenge-rules", "Challenge Rules"], ["author-submissions", "Submission Terms"],
   ["paid-programs", "Paid Programs"], ["refunds", "Refunds"], ["author-services", "Author Services Terms"], ["community-guidelines", "Community Guidelines"],
 ];
