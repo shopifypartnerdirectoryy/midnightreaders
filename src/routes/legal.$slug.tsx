@@ -29,7 +29,7 @@ export const Route = createFileRoute("/legal/$slug")({
   component: Legal,
 });
 
-export const legalLinks = Object.entries(pages).map(([slug, p]) => ({ slug, title: p.title }));
+
 
 function Legal() {
   const { page } = Route.useLoaderData();
