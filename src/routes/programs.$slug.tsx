@@ -57,7 +57,7 @@ function ProgramPage() {
               <p className={`mb-4 mt-1 text-sm ${p.dark ? "opacity-70" : "text-muted-foreground"}`}>
                 {p.access === "For authors" ? "Tell us about your book and which service you need." : "Online payment opens soon — leave your details and we'll email you first."}
               </p>
-              <InquiryForm program={p.slug} cta={p.cta} dark={p.dark} />
+              <InquiryForm program={p.slug} cta={p.cta} dark={!!p.dark} />
             </>
           )}
         </div>

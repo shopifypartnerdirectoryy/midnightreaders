@@ -56,7 +56,7 @@ function BooksPage() {
                 <p className="mt-2 text-sm text-muted-foreground">{b.description}</p>
                 {user ? (
                   <div className="mt-4 flex flex-wrap gap-2">
-                    {[["want", "Want to read"], ["reading", "Reading"], ["read", "Read"]].map(([v, l]) => (
+                    {([["want", "Want to read"], ["reading", "Reading"], ["read", "Read"]] as const).map(([v, l]) => (
                       <button key={v} onClick={() => save(b.id, v)}
                         className={`rounded-full px-3 py-1 text-xs font-semibold ${shelf[b.id] === v ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{l}</button>
                     ))}
