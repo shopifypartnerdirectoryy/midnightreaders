@@ -9,32 +9,47 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 type ShelfRow = { id: string; status: string; books: { title: string; author_name: string } | null };
 type Sub = { id: string; title: string; status: string; admin_note: string | null };
+type Note = { id: string; user_id: string | null; title: string; body: string | null; link: string | null; read_at: string | null; created_at: string };
 
 function Dashboard() {
   const { user } = Route.useRouteContext();
   const nav = useNavigate();
   const [name, setName] = useState("");
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [editName, setEditName] = useState("");
   const [goal, setGoal] = useState<number | null>(null);
   const [goalInput, setGoalInput] = useState(12);
   const [shelf, setShelf] = useState<ShelfRow[]>([]);
   const [subs, setSubs] = useState<Sub[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   async function load() {
-    const [p, e, s, b] = await Promise.all([
-      supabase.from("profiles").select("display_name").eq("id", user.id).maybeSingle(),
+    const [p, e, s, b, n] = await Promise.all([
+      supabase.from("profiles").select("display_name,is_author").eq("id", user.id).maybeSingle(),
       supabase.from("challenge_enrollments").select("goal").eq("user_id", user.id).maybeSingle(),
       supabase.from("shelf").select("id,status,books(title,author_name)").order("updated_at", { ascending: false }),
       supabase.from("book_submissions").select("id,title,status,admin_note").eq("user_id", user.id).order("created_at", { ascending: false }),
+      supabase.from("notifications").select("id,user_id,title,body,link,read_at,created_at").order("created_at", { ascending: false }).limit(20),
     ]);
-    setName(p.data?.display_name ?? "");
+    setName(p.data?.display_name ?? ""); setEditName(p.data?.display_name ?? "");
+    setIsAuthor(!!p.data?.is_author);
     setGoal(e.data?.goal ?? null);
     setShelf((s.data as ShelfRow[]) ?? []);
     setSubs(b.data ?? []);
+    setNotes(n.data ?? []);
   }
   useEffect(() => { void load(); }, []);
 
   async function join() {
     await supabase.from("challenge_enrollments").upsert({ user_id: user.id, goal: goalInput });
+    void load();
+  }
+  async function saveProfile() {
+    await supabase.from("profiles").update({ display_name: editName.trim().slice(0, 60), is_author: isAuthor }).eq("id", user.id);
+    void load();
+  }
+  async function markRead(id: string) {
+    await supabase.from("notifications").update({ read_at: new Date().toISOString() }).eq("id", id);
     void load();
   }
   async function signOut() { await supabase.auth.signOut(); nav({ to: "/", replace: true }); }
@@ -82,6 +97,33 @@ function Dashboard() {
             {subs.map((s) => <li key={s.id} className="text-sm"><span className="font-semibold">{s.title}</span> — <span className="capitalize">{s.status}</span>{s.admin_note && <span className="text-muted-foreground"> · {s.admin_note}</span>}</li>)}
             {!subs.length && <li className="text-sm text-muted-foreground">Authors can submit books for MRC programs.</li>}
           </ul>
+        </div>
+
+        <div className="glass rounded-[2rem] p-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">Notifications</p>
+          <ul className="mt-4 grid gap-3">
+            {notes.map((n) => (
+              <li key={n.id} className={`text-sm ${n.read_at ? "opacity-60" : ""}`}>
+                <p className="font-semibold">{n.title}</p>
+                {n.body && <p className="text-muted-foreground">{n.body}</p>}
+                <p className="mt-1 flex gap-3 text-xs text-muted-foreground">
+                  {new Date(n.created_at).toLocaleDateString()}
+                  {n.link && <a href={n.link} className="text-accent">Open</a>}
+                  {n.user_id && !n.read_at && <button onClick={() => markRead(n.id)} className="text-accent">Mark read</button>}
+                </p>
+              </li>
+            ))}
+            {!notes.length && <li className="text-sm text-muted-foreground">You're all caught up.</li>}
+          </ul>
+        </div>
+
+        <div className="glass rounded-[2rem] p-8">
+          <p className="text-xs font-semibold uppercase tracking-widest text-mint">Profile</p>
+          <div className="mt-4 grid gap-3">
+            <input className="field" placeholder="Display name" maxLength={60} value={editName} onChange={(e) => setEditName(e.target.value)} />
+            <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={isAuthor} onChange={(e) => setIsAuthor(e.target.checked)} /> I'm an author</label>
+            <button onClick={saveProfile} className="btn-ink justify-self-start">Save profile</button>
+          </div>
         </div>
       </div>
     </section>

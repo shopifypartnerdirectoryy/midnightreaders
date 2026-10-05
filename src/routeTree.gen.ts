@@ -15,7 +15,9 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AwardsRouteImport } from './routes/awards'
 import { Route as BooksRouteImport } from './routes/books'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as SpikesRouteImport } from './routes/spikes'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -53,9 +55,19 @@ const BooksRoute = BooksRouteImport.update({
   path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SpikesRoute = SpikesRouteImport.update({
@@ -100,7 +112,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
   '/books': typeof BooksRoute
+  '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/search': typeof SearchRoute
   '/spikes': typeof SpikesRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -115,7 +129,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
   '/books': typeof BooksRoute
+  '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/search': typeof SearchRoute
   '/spikes': typeof SpikesRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -132,7 +148,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
   '/books': typeof BooksRoute
+  '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
+  '/search': typeof SearchRoute
   '/spikes': typeof SpikesRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -149,7 +167,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/awards'
     | '/books'
+    | '/community'
     | '/contact'
+    | '/search'
     | '/spikes'
     | '/admin'
     | '/dashboard'
@@ -164,7 +184,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/awards'
     | '/books'
+    | '/community'
     | '/contact'
+    | '/search'
     | '/spikes'
     | '/admin'
     | '/dashboard'
@@ -180,7 +202,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/awards'
     | '/books'
+    | '/community'
     | '/contact'
+    | '/search'
     | '/spikes'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
@@ -197,7 +221,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   AwardsRoute: typeof AwardsRoute
   BooksRoute: typeof BooksRoute
+  CommunityRoute: typeof CommunityRoute
   ContactRoute: typeof ContactRoute
+  SearchRoute: typeof SearchRoute
   SpikesRoute: typeof SpikesRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProgramsSlugRoute: typeof ProgramsSlugRoute
@@ -248,11 +274,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/spikes': {
@@ -329,7 +369,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   AwardsRoute: AwardsRoute,
   BooksRoute: BooksRoute,
+  CommunityRoute: CommunityRoute,
   ContactRoute: ContactRoute,
+  SearchRoute: SearchRoute,
   SpikesRoute: SpikesRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProgramsSlugRoute: ProgramsSlugRoute,
