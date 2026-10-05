@@ -5,6 +5,7 @@
 - [x] Author book submission + admin review
 - [x] Admin dashboard (submissions, books, spikes, awards, inquiries)
 - [ ] Payments for After Dark / Spotlight / Book-to-Film / Author Services — needs user's choice of payment provider and prices
+- [x] In-app notifications (submission updates, new spikes, admin announcements), global search, profile editing, Community landing
 - [ ] Email notifications — needs an email sending domain
-- [ ] Community module — spec handled separately
+- [ ] Full Community module — waiting on its separate spec
 - [ ] Platform-controlled activity accounts — declined as specified (fake reader activity); offer labelled official MRC content instead

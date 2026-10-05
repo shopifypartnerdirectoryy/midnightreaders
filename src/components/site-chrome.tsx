@@ -20,8 +20,10 @@ export function SiteHeader() {
           <Link to="/books" className="hover:text-foreground">Books</Link>
           <Link to="/spikes" className="hover:text-foreground">Spikes</Link>
           <Link to="/awards" className="hover:text-foreground">Awards</Link>
+          <Link to="/community" className="hover:text-foreground">Community</Link>
           <Link to="/programs/$slug" params={{ slug: "author-services" }} className="hover:text-foreground">Authors</Link>
           {isAdmin && <Link to="/admin" className="hover:text-foreground">Admin</Link>}
+          <Link to="/search" aria-label="Search" className="hover:text-foreground">⌕ Search</Link>
         </nav>
         {user
           ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
