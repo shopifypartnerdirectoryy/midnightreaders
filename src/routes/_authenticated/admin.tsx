@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
 
-const tabs = ["Overview", "Submissions", "Books", "Spikes", "Awards", "Inquiries"] as const;
+const tabs = ["Overview", "Submissions", "Books", "Spikes", "Awards", "Inquiries", "Announcements"] as const;
 
 function Admin() {
   const { isAdmin, ready } = useAuth();
@@ -82,6 +82,12 @@ function Admin() {
           <div className="grid gap-3">
             {inq.map((i) => <div key={i.id} className="glass rounded-2xl p-5"><p className="font-semibold">{i.name} <span className="font-normal text-muted-foreground">· {i.email} · {i.program}</span></p>{i.message && <p className="mt-1 text-sm text-muted-foreground">{i.message}</p>}</div>)}
             {!inq.length && <p className="text-muted-foreground">No inquiries yet.</p>}
+          </div>
+        )}
+        {tab === "Announcements" && (
+          <div className="glass max-w-xl rounded-2xl p-5">
+            <p className="mb-3 text-sm text-muted-foreground">Sends an in-platform notification to every member. New Spikes notify members automatically.</p>
+            <SimpleForm fields={["title", "body", "link"]} onSave={async (v) => { await supabase.from("notifications").insert({ ...v, kind: "announcement", user_id: null } as never); alert("Announcement sent"); }} />
           </div>
         )}
       </div>
