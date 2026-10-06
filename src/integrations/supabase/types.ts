@@ -143,6 +143,102 @@ export type Database = {
         }
         Relationships: []
       }
+      community_buddy_requests: {
+        Row: {
+          availability: string
+          book_title: string
+          created_at: string
+          id: string
+          pace: string
+          user_id: string
+        }
+        Insert: {
+          availability: string
+          book_title: string
+          created_at?: string
+          id?: string
+          pace: string
+          user_id: string
+        }
+        Update: {
+          availability?: string
+          book_title?: string
+          created_at?: string
+          id?: string
+          pace?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_discussions: {
+        Row: {
+          author_name: string
+          body: string
+          category: string
+          created_at: string
+          id: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          author_name: string
+          body: string
+          category: string
+          created_at?: string
+          id?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          category?: string
+          created_at?: string
+          id?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_members: {
+        Row: {
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_poll_votes: {
+        Row: {
+          choice: string
+          created_at: string
+          id: string
+          poll_key: string
+          user_id: string
+        }
+        Insert: {
+          choice: string
+          created_at?: string
+          id?: string
+          poll_key: string
+          user_id: string
+        }
+        Update: {
+          choice?: string
+          created_at?: string
+          id?: string
+          poll_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       inquiries: {
         Row: {
           created_at: string
