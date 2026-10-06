@@ -259,7 +259,7 @@ function NewTopicDialog({ joined, onCreated }: { joined: boolean; onCreated: (di
     event.preventDefault();
     if (!user || !joined) { setMessage("Join the group before starting a discussion."); return; }
     setBusy(true);
-    const authorName = String(user.user_metadata?.display_name ?? user.user_metadata?.full_name ?? "Midnight Reader").slice(0, 60);
+    const authorName = String(user.user_metadata?.["display_name"] ?? user.user_metadata?.["full_name"] ?? "Midnight Reader").slice(0, 60);
     const { data, error } = await supabase.from("community_discussions").insert({
       user_id: user.id,
       author_name: authorName,
