@@ -12,3 +12,4 @@
 - Program content lives in src/lib/mrc-data.ts and renders via /programs/$slug — keeps one template for all programs.
 - Glass surfaces use .glass/.glass-lg/.glass-ink and .btn-* classes in styles.css — keeps the look consistent.
 - Data access uses the browser client with RLS; admin rights come from user_roles via has_role — first signup becomes admin.
+- Community interactions persist in dedicated RLS-protected tables while official MRC editorial items remain explicit static seed content — prevents fabricated member activity.

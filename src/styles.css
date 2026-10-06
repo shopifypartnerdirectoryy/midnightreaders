@@ -53,6 +53,16 @@
   --color-chart-5: var(--chart-5);
   --color-mint: var(--mint);
   --color-gold: var(--gold);
+  --color-community-ink: var(--community-ink);
+  --color-community-surface: var(--community-surface);
+  --color-community-soft: var(--community-soft);
+  --color-community-border: var(--community-border);
+  --color-community-foreground: var(--community-foreground);
+  --color-community-muted: var(--community-muted);
+  --color-community-gold: var(--community-gold);
+  --color-community-purple: var(--community-purple);
+  --color-community-purple-bright: var(--community-purple-bright);
+  --color-community-mint: var(--community-mint);
   --font-serif: 'Fraunces', Georgia, serif;
   --font-sans: 'Inter', system-ui, sans-serif;
   --shadow-glass: var(--shadow-glass);
@@ -85,6 +95,16 @@
   --accent-foreground: oklch(1 0 0);
   --mint: oklch(0.78 0.13 182);
   --gold: oklch(0.81 0.16 80);
+  --community-ink: oklch(0.14 0.026 285);
+  --community-surface: oklch(0.205 0.032 288 / 92%);
+  --community-soft: oklch(0.29 0.04 288 / 62%);
+  --community-border: oklch(0.82 0.04 285 / 20%);
+  --community-foreground: oklch(0.96 0.012 88);
+  --community-muted: oklch(0.78 0.025 285);
+  --community-gold: oklch(0.82 0.14 82);
+  --community-purple: oklch(0.49 0.16 302);
+  --community-purple-bright: oklch(0.73 0.15 305);
+  --community-mint: oklch(0.78 0.13 174);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(1 0 0 / 70%);
@@ -177,4 +197,13 @@
 @layer components {
   .field { width: 100%; border-radius: 0.75rem; border: 1px solid var(--input); background: oklch(1 0 0 / 70%); padding: 0.7rem 1rem; font-size: 0.875rem; outline: none; }
   .field:focus { border-color: var(--ring); }
+  .community-theme { background: var(--community-ink); color: var(--community-foreground); }
+  .community-banner-shade { background: linear-gradient(90deg, oklch(0.1 0.025 285 / 96%) 0%, oklch(0.1 0.025 285 / 75%) 55%, oklch(0.1 0.025 285 / 35%) 100%), linear-gradient(0deg, oklch(0.1 0.025 285 / 90%) 0%, transparent 55%); }
+  .community-panel { border: 1px solid var(--community-border); background: var(--community-surface); box-shadow: 0 24px 60px -38px oklch(0 0 0 / 80%); backdrop-filter: blur(24px); }
+  .community-chip { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid var(--community-border); border-radius: 9999px; background: oklch(0.16 0.025 285 / 70%); padding: .35rem .65rem; font-size: .7rem; font-weight: 600; color: var(--community-muted); backdrop-filter: blur(16px); }
+  .community-chip svg { width: .75rem; height: .75rem; }
+  .community-chip-gold { border-color: oklch(0.82 0.14 82 / 35%); color: var(--community-gold); }
+  .community-kicker { display: inline-flex; align-items: center; gap: .45rem; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--community-gold); }
+  .community-kicker svg { width: .9rem; height: .9rem; }
+  .community-topic-label { border: 1px solid var(--community-border); padding: .15rem .45rem; font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--community-gold); }
 }

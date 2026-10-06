@@ -7,5 +7,5 @@
 - [ ] Payments for After Dark / Spotlight / Book-to-Film / Author Services — needs user's choice of payment provider and prices
 - [x] In-app notifications (submission updates, new spikes, admin announcements), global search, profile editing, Community landing
 - [ ] Email notifications — needs an email sending domain
-- [ ] Full Community module — waiting on its separate spec
+- [x] Community Hub — group membership, discussions, BOTM polls, buddy reads, members and moderation overview
 - [ ] Platform-controlled activity accounts — declined as specified (fake reader activity); offer labelled official MRC content instead
