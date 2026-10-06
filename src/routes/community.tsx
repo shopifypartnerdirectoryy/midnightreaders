@@ -1,19 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
   ArrowRight,
   BookOpen,
-  CalendarDays,
   Check,
   ChevronRight,
   Circle,
-  Clock3,
   Crown,
   Flame,
-  Heart,
-  LockKeyhole,
   MessageCircle,
-  MoonStar,
   Search,
   ShieldCheck,
   Sparkles,
@@ -182,14 +177,14 @@ function Community() {
             <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(17rem,3fr)]">
               <div className="space-y-6">
                 <BotmSpotlight onVote={() => setNotice("Open BOTM & Polls to choose the next read.")} />
-                <DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} />
+                <DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} />
                 <BuddyMatchmaker requests={buddyRequested} onRequest={requestBuddy} />
               </div>
               <CommunitySidebar />
             </div>
           </TabsContent>
 
-          <TabsContent value="discussions" className="mt-8"><DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} expanded /></TabsContent>
+          <TabsContent value="discussions" className="mt-8"><DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} expanded /></TabsContent>
           <TabsContent value="botm-and-polls" className="mt-8"><BotmAndPolls vote={vote} onVote={castVote} /></TabsContent>
           <TabsContent value="buddy-reads" className="mt-8"><BuddyMatchmaker requests={buddyRequested} onRequest={requestBuddy} expanded /></TabsContent>
           <TabsContent value="members" className="mt-8"><MembersDirectory /></TabsContent>
@@ -225,11 +220,11 @@ function BotmSpotlight({ onVote }: { onVote: () => void }) {
   );
 }
 
-function DiscussionFeed({ category, setCategory, discussions, expanded = false }: { category: Category; setCategory: (category: Category) => void; discussions: Discussion[]; expanded?: boolean }) {
+function DiscussionFeed({ category, setCategory, discussions, joined, onCreated, expanded = false }: { category: Category; setCategory: (category: Category) => void; discussions: Discussion[]; joined: boolean; onCreated: (discussion: Discussion) => void; expanded?: boolean }) {
   const shown = expanded ? discussions : discussions.slice(0, 4);
   return (
     <section className="community-panel p-6 sm:p-8">
-      <SectionHeading eyebrow="Around the tables" title="Latest discussions" action={<Button size="sm" className="bg-community-purple text-community-foreground hover:bg-community-purple/85"><MessageCircle /> New topic</Button>} />
+      <SectionHeading eyebrow="Around the tables" title="Latest discussions" action={<NewTopicDialog joined={joined} onCreated={onCreated} />} />
       <div className="mt-6 flex gap-2 overflow-x-auto pb-1" aria-label="Filter discussions">
         {(["All", "Announcements", "BOTM", "Buddy Reads"] as Category[]).map((item) => <Button key={item} size="sm" variant="ghost" onClick={() => setCategory(item)} className={category === item ? "bg-community-gold text-community-ink hover:bg-community-gold/90" : "border border-community-border text-community-muted hover:bg-community-soft hover:text-community-foreground"}>{item}</Button>)}
       </div>
@@ -249,6 +244,48 @@ function DiscussionFeed({ category, setCategory, discussions, expanded = false }
       </div>
     </section>
   );
+}
+
+function NewTopicDialog({ joined, onCreated }: { joined: boolean; onCreated: (discussion: Discussion) => void }) {
+  const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [category, setCategory] = useState<Exclude<Category, "All">>("BOTM");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    if (!user || !joined) { setMessage("Join the group before starting a discussion."); return; }
+    setBusy(true);
+    const authorName = String(user.user_metadata?.["display_name"] ?? user.user_metadata?.["full_name"] ?? "Midnight Reader").slice(0, 60);
+    const { data, error } = await supabase.from("community_discussions").insert({
+      user_id: user.id,
+      author_name: authorName,
+      category,
+      title: title.trim(),
+      body: body.trim(),
+    }).select("id,author_name,body,category,created_at,title").single();
+    setBusy(false);
+    if (error || !data) { setMessage(error?.message ?? "Your topic could not be posted."); return; }
+    onCreated(data);
+    setTitle(""); setBody(""); setMessage(""); setOpen(false);
+  }
+
+  return <Dialog open={open} onOpenChange={setOpen}>
+    <DialogTrigger asChild><Button size="sm" className="bg-community-purple text-community-foreground hover:bg-community-purple/85"><MessageCircle /> New topic</Button></DialogTrigger>
+    <DialogContent className="border-community-border bg-community-ink text-community-foreground">
+      <DialogHeader><DialogTitle className="font-serif text-2xl">Start a discussion</DialogTitle><DialogDescription className="text-community-muted">Open a thoughtful conversation with the reading room.</DialogDescription></DialogHeader>
+      <form onSubmit={submit} className="mt-2 grid gap-4">
+        <label className="grid gap-1.5 text-sm"><span>Category</span><select value={category} onChange={(event) => setCategory(event.target.value as Exclude<Category, "All">)} className="h-10 border border-community-border bg-community-soft px-3 outline-none focus:border-community-gold"><option>Announcements</option><option>BOTM</option><option>Buddy Reads</option></select></label>
+        <label className="grid gap-1.5 text-sm"><span>Topic title</span><input value={title} onChange={(event) => setTitle(event.target.value)} minLength={3} maxLength={140} required className="h-10 border border-community-border bg-community-soft px-3 outline-none focus:border-community-gold" /></label>
+        <label className="grid gap-1.5 text-sm"><span>Your opening thought</span><textarea value={body} onChange={(event) => setBody(event.target.value)} minLength={3} maxLength={2000} required rows={5} className="resize-none border border-community-border bg-community-soft p-3 outline-none focus:border-community-gold" /></label>
+        {message && <p role="status" className="text-sm text-community-gold">{message}</p>}
+        <Button disabled={busy} className="justify-self-start bg-community-gold text-community-ink hover:bg-community-gold/90">{busy ? "Posting…" : "Post topic"}</Button>
+      </form>
+    </DialogContent>
+  </Dialog>;
 }
 
 function BuddyMatchmaker({ requests, onRequest, expanded = false }: { requests: string[]; onRequest: (book: string) => void; expanded?: boolean }) {
