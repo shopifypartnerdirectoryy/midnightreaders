@@ -19,7 +19,7 @@ export const trackResult: Record<Track, { name: string; blurb: string; slug: str
 export function scoreTrack(answers: Track[]): Track {
   const c: Record<Track, number> = { diver: 0, screen: 0, owl: 0 };
   answers.forEach((a) => c[a]++);
-  return answers.reduce((best, a) => (c[a] > c[best] ? a : best), answers[0]);
+  return answers.reduce<Track>((best, a) => (c[a] > c[best] ? a : best), answers[0] ?? "diver");
 }
 
 export function TrackQuiz() {
@@ -42,9 +42,9 @@ export function TrackQuiz() {
             {!done ? (
               <>
                 <p className="mt-5 text-xs text-muted-foreground">Question {answers.length + 1} of {questions.length}</p>
-                <h2 className="mt-1 font-serif text-2xl font-semibold">{questions[answers.length].q}</h2>
+                <h2 className="mt-1 font-serif text-2xl font-semibold">{questions[answers.length]!.q}</h2>
                 <div className="mt-5 grid gap-2">
-                  {questions[answers.length].a.map(([label, t]) => (
+                  {questions[answers.length]!.a.map(([label, t]) => (
                     <button key={label} onClick={() => setAnswers([...answers, t])} className="glass rounded-xl px-4 py-3 text-left text-sm hover:-translate-y-0.5 transition">{label}</button>
                   ))}
                 </div>

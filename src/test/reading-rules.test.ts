@@ -15,7 +15,7 @@ describe("reading rules", () => {
       a: { book_id: "a", readers: 9, finished: 0, week_activity: 1, comments: 0 },
       b: { book_id: "b", readers: 1, finished: 0, week_activity: 5, comments: 0 },
     });
-    expect(r[0].id).toBe("b");
+    expect(r[0]?.id).toBe("b");
   });
   it("quiz picks the majority track", () => {
     expect(scoreTrack(["owl", "screen", "owl"])).toBe("owl");

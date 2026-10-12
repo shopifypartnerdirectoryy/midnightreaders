@@ -60,7 +60,7 @@ function BookPage() {
   async function post(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !draft.body.trim()) return;
-    const name = user.user_metadata?.display_name ?? user.email?.split("@")[0] ?? "Reader";
+    const name = user.user_metadata?.['display_name'] ?? user.email?.split("@")[0] ?? "Reader";
     await supabase.from("book_comments").insert({ book_id: id, user_id: user.id, author_name: name, chapter: draft.chapter, body: draft.body.trim() });
     setDraft({ ...draft, body: "" });
     void loadComments();
