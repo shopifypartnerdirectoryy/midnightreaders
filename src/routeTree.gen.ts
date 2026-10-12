@@ -14,7 +14,6 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AwardsRouteImport } from './routes/awards'
-import { Route as BooksRouteImport } from './routes/books'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as SearchRouteImport } from './routes/search'
@@ -22,6 +21,8 @@ import { Route as SpikesRouteImport } from './routes/spikes'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
+import { Route as BooksIndexRouteImport } from './routes/books.index'
+import { Route as BooksIdRouteImport } from './routes/books.$id'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
@@ -48,11 +49,6 @@ const AuthRoute = AuthRouteImport.update({
 const AwardsRoute = AwardsRouteImport.update({
   id: '/awards',
   path: '/awards',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BooksRoute = BooksRouteImport.update({
-  id: '/books',
-  path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityRoute = CommunityRouteImport.update({
@@ -90,6 +86,16 @@ const AuthenticatedSubmitRoute = AuthenticatedSubmitRouteImport.update({
   path: '/submit',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const BooksIndexRoute = BooksIndexRouteImport.update({
+  id: '/books/',
+  path: '/books/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BooksIdRoute = BooksIdRouteImport.update({
+  id: '/books/$id',
+  path: '/books/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
@@ -111,7 +117,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
-  '/books': typeof BooksRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/search': typeof SearchRoute
@@ -119,8 +124,10 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
+  '/books/': typeof BooksIndexRoute
   '/programs/': typeof ProgramsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -128,7 +135,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
-  '/books': typeof BooksRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/search': typeof SearchRoute
@@ -136,8 +142,10 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
+  '/books': typeof BooksIndexRoute
   '/programs': typeof ProgramsIndexRoute
 }
 export interface FileRoutesById {
@@ -147,7 +155,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/awards': typeof AwardsRoute
-  '/books': typeof BooksRoute
   '/community': typeof CommunityRoute
   '/contact': typeof ContactRoute
   '/search': typeof SearchRoute
@@ -155,8 +162,10 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
+  '/books/': typeof BooksIndexRoute
   '/programs/': typeof ProgramsIndexRoute
 }
 export interface FileRouteTypes {
@@ -166,7 +175,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/awards'
-    | '/books'
     | '/community'
     | '/contact'
     | '/search'
@@ -174,8 +182,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
+    | '/books/'
     | '/programs/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -183,7 +193,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/awards'
-    | '/books'
     | '/community'
     | '/contact'
     | '/search'
@@ -191,8 +200,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
+    | '/books'
     | '/programs'
   id:
     | '__root__'
@@ -201,7 +212,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/awards'
-    | '/books'
     | '/community'
     | '/contact'
     | '/search'
@@ -209,8 +219,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
+    | '/books/'
     | '/programs/'
   fileRoutesById: FileRoutesById
 }
@@ -220,13 +232,14 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   AwardsRoute: typeof AwardsRoute
-  BooksRoute: typeof BooksRoute
   CommunityRoute: typeof CommunityRoute
   ContactRoute: typeof ContactRoute
   SearchRoute: typeof SearchRoute
   SpikesRoute: typeof SpikesRoute
+  BooksIdRoute: typeof BooksIdRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProgramsSlugRoute: typeof ProgramsSlugRoute
+  BooksIndexRoute: typeof BooksIndexRoute
   ProgramsIndexRoute: typeof ProgramsIndexRoute
 }
 
@@ -265,13 +278,6 @@ declare module '@tanstack/react-router' {
       path: '/awards'
       fullPath: '/awards'
       preLoaderRoute: typeof AwardsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/books': {
-      id: '/books'
-      path: '/books'
-      fullPath: '/books'
-      preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/community': {
@@ -323,6 +329,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSubmitRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/books/': {
+      id: '/books/'
+      path: '/books'
+      fullPath: '/books/'
+      preLoaderRoute: typeof BooksIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/books/$id': {
+      id: '/books/$id'
+      path: '/books/$id'
+      fullPath: '/books/$id'
+      preLoaderRoute: typeof BooksIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
@@ -368,13 +388,14 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   AwardsRoute: AwardsRoute,
-  BooksRoute: BooksRoute,
   CommunityRoute: CommunityRoute,
   ContactRoute: ContactRoute,
   SearchRoute: SearchRoute,
   SpikesRoute: SpikesRoute,
+  BooksIdRoute: BooksIdRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProgramsSlugRoute: ProgramsSlugRoute,
+  BooksIndexRoute: BooksIndexRoute,
   ProgramsIndexRoute: ProgramsIndexRoute,
 }
 export const routeTree = rootRouteImport

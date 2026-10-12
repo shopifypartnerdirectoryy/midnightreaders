@@ -44,6 +44,44 @@ export type Database = {
         }
         Relationships: []
       }
+      book_comments: {
+        Row: {
+          author_name: string
+          body: string
+          book_id: string
+          chapter: number
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          author_name: string
+          body: string
+          book_id: string
+          chapter: number
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Update: {
+          author_name?: string
+          body?: string
+          book_id?: string
+          chapter?: number
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_comments_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       book_submissions: {
         Row: {
           admin_note: string | null
@@ -95,33 +133,42 @@ export type Database = {
           cover_url: string | null
           created_at: string
           description: string | null
+          excerpt: string | null
           featured: boolean
           genre: string | null
           id: string
           program: string | null
+          publisher: string | null
           title: string
+          total_chapters: number
         }
         Insert: {
           author_name: string
           cover_url?: string | null
           created_at?: string
           description?: string | null
+          excerpt?: string | null
           featured?: boolean
           genre?: string | null
           id?: string
           program?: string | null
+          publisher?: string | null
           title: string
+          total_chapters?: number
         }
         Update: {
           author_name?: string
           cover_url?: string | null
           created_at?: string
           description?: string | null
+          excerpt?: string | null
           featured?: boolean
           genre?: string | null
           id?: string
           program?: string | null
+          publisher?: string | null
           title?: string
+          total_chapters?: number
         }
         Relationships: []
       }
@@ -323,6 +370,35 @@ export type Database = {
         }
         Relationships: []
       }
+      reading_progress: {
+        Row: {
+          book_id: string
+          chapter: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          chapter?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          book_id?: string
+          chapter?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reading_progress_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shelf: {
         Row: {
           book_id: string
@@ -405,6 +481,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      book_stats: {
+        Args: never
+        Returns: {
+          book_id: string
+          comments: number
+          finished: number
+          readers: number
+          week_activity: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -412,6 +498,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      member_count: { Args: never; Returns: number }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import hero from "@/assets/hero.jpg";
 import { books, programs, toneChip } from "@/lib/mrc-data";
+import { TrackQuiz } from "@/components/track-quiz";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,7 +36,7 @@ function Index() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link to="/auth" className="btn-ink">Join Midnight Readers Club</Link>
                 <Link to="/programs/$slug" params={{ slug: "reading-challenge" }} className="btn-glass">Explore the Reading Challenge</Link>
-                <Link to="/spikes" className="btn-glass">Discover Midnight Spikes</Link>
+                <TrackQuiz />
               </div>
               <div className="mt-6 flex gap-6 text-sm font-semibold">
                 <Link to="/programs/$slug" params={{ slug: "author-services" }} className="text-accent hover:underline">For Authors →</Link>
