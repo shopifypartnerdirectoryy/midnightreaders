@@ -8,6 +8,29 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 type ShelfRow = { id: string; status: string; books: { title: string; author_name: string } | null };
+type ProgRow = { book_id: string; chapter: number; books: { title: string; total_chapters: number } | null };
+
+function MyReadingProgress() {
+  const [rows, setRows] = useState<ProgRow[]>([]);
+  useEffect(() => { supabase.from("reading_progress").select("book_id,chapter,books(title,total_chapters)").order("updated_at", { ascending: false }).then(({ data }) => setRows((data as ProgRow[]) ?? [])); }, []);
+  return (
+    <div className="glass rounded-[2rem] p-8 md:col-span-2">
+      <p className="text-xs font-semibold uppercase tracking-widest text-mint">My reading progress</p>
+      <ul className="mt-4 grid gap-3">
+        {rows.map((r) => {
+          const total = r.books?.total_chapters ?? 12;
+          return (
+            <li key={r.book_id}>
+              <Link to="/books/$id" params={{ id: r.book_id }} className="flex justify-between text-sm"><span className="font-semibold">{r.books?.title}</span><span className="text-muted-foreground">Chapter {r.chapter} of {total}</span></Link>
+              <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted"><div className="h-full bg-mint" style={{ width: `${(r.chapter / total) * 100}%` }} /></div>
+            </li>
+          );
+        })}
+        {!rows.length && <li className="text-sm text-muted-foreground">Open any book and log your chapter to track it here.</li>}
+      </ul>
+    </div>
+  );
+}
 type Sub = { id: string; title: string; status: string; admin_note: string | null };
 type Note = { id: string; user_id: string | null; title: string; body: string | null; link: string | null; read_at: string | null; created_at: string };
 
@@ -90,6 +113,8 @@ function Dashboard() {
             {!shelf.length && <li className="text-sm text-muted-foreground">Nothing saved yet.</li>}
           </ul>
         </div>
+
+        <MyReadingProgress />
 
         <div className="glass rounded-[2rem] p-8 md:col-span-2">
           <div className="flex items-center justify-between"><p className="text-xs font-semibold uppercase tracking-widest text-gold">My book submissions</p><Link to="/submit" className="text-sm font-semibold text-accent">Submit a book →</Link></div>

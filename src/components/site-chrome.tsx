@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "@/hooks/use-auth";
+import { CommunityPulse } from "@/components/community-pulse";
 
 const legal: [string, string][] = [
   ["terms", "Terms"], ["privacy", "Privacy"], ["challenge-rules", "Challenge Rules"], ["author-submissions", "Submission Terms"],
@@ -29,6 +30,7 @@ export function SiteHeader() {
           ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
           : <Link to="/auth" className="btn-ink !px-5 !py-2.5">Join the club</Link>}
       </header>
+      <CommunityPulse />
     </div>
   );
 }
