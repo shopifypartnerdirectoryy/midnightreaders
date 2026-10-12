@@ -5,7 +5,7 @@ import { coverSrc } from "@/lib/covers";
 import { useAuth } from "@/hooks/use-auth";
 import type { Tables } from "@/integrations/supabase/types";
 
-export const Route = createFileRoute("/books")({
+export const Route = createFileRoute("/books/")({
   head: () => ({
     meta: [
       { title: "Book Discovery — Midnight Readers Club" },
