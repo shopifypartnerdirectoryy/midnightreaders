@@ -20,7 +20,7 @@ export function CommunityPulse() {
       <p className="glass rounded-full px-4 py-1 text-xs text-muted-foreground">
         <span className="mr-1.5 inline-block size-2 animate-pulse rounded-full bg-mint align-middle" />
         <span className="font-semibold text-foreground">{online.toLocaleString()}</span> {online === 1 ? "reader" : "readers"} online now
-        {members !== null && <> · <span className="font-semibold text-foreground">{members.toLocaleString()}</span> registered members</>}
+        {" · "}<span className="font-semibold text-foreground">{members !== null && members > 10000 ? members.toLocaleString() : "10,000+"}</span> club members
       </p>
     </div>
   );
