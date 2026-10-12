@@ -22,6 +22,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedSubmitRouteImport } from './routes/_authenticated/submit'
 import { Route as BooksIndexRouteImport } from './routes/books.index'
+import { Route as BooksIdRouteImport } from './routes/books.$id'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
@@ -90,6 +91,11 @@ const BooksIndexRoute = BooksIndexRouteImport.update({
   path: '/books/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BooksIdRoute = BooksIdRouteImport.update({
+  id: '/books/$id',
+  path: '/books/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
   path: '/legal/$slug',
@@ -118,6 +124,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books/': typeof BooksIndexRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books': typeof BooksIndexRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/submit': typeof AuthenticatedSubmitRoute
+  '/books/$id': typeof BooksIdRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books/': typeof BooksIndexRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
     | '/books/'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
     | '/books'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/submit'
+    | '/books/$id'
     | '/legal/$slug'
     | '/programs/$slug'
     | '/books/'
@@ -224,6 +236,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   SearchRoute: typeof SearchRoute
   SpikesRoute: typeof SpikesRoute
+  BooksIdRoute: typeof BooksIdRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProgramsSlugRoute: typeof ProgramsSlugRoute
   BooksIndexRoute: typeof BooksIndexRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BooksIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/books/$id': {
+      id: '/books/$id'
+      path: '/books/$id'
+      fullPath: '/books/$id'
+      preLoaderRoute: typeof BooksIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/$slug': {
       id: '/legal/$slug'
       path: '/legal/$slug'
@@ -372,6 +392,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   SearchRoute: SearchRoute,
   SpikesRoute: SpikesRoute,
+  BooksIdRoute: BooksIdRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProgramsSlugRoute: ProgramsSlugRoute,
   BooksIndexRoute: BooksIndexRoute,
