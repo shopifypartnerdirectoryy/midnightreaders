@@ -141,7 +141,7 @@ function Community() {
               <div>
                 <div className="mb-4 flex flex-wrap gap-2">
                   <span className="community-chip"><Users /> Public Group</span>
-                  <span className="community-chip"><Circle className="fill-community-mint text-community-mint" /> 10,240 Members</span>
+                  <span className="community-chip"><Circle className="fill-community-mint text-community-mint" /> 10,000+ Members</span>
                   <span className="community-chip community-chip-gold"><BookOpen /> Active BOTM</span>
                 </div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-community-gold">Midnight Readers Club Community</p>
@@ -323,5 +323,5 @@ function BotmAndPolls({ vote, onVote }: { vote: string | null; onVote: (choice: 
 
 function MembersDirectory() {
   const members = [...moderators, { name: "Amara O.", role: "Literary fiction", initials: "AO" }, { name: "Noah K.", role: "Contemporary fiction", initials: "NK" }, { name: "Ife A.", role: "Essays & memoir", initials: "IA" }];
-  return <section className="community-panel p-6 sm:p-8"><SectionHeading eyebrow="10,240 readers" title="Members of the reading room" action={<div className="relative hidden sm:block"><Search className="absolute left-3 top-2.5 size-4 text-community-muted" /><input aria-label="Search members" placeholder="Search readers" className="h-9 border border-community-border bg-community-soft pl-9 pr-3 text-sm outline-none focus:border-community-gold" /></div>} /><div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{members.map((member) => <article key={member.name} className="flex items-center gap-3 border border-community-border bg-community-soft p-4"><div className="grid size-11 place-items-center rounded-full bg-community-purple font-semibold">{member.initials}</div><div><h3 className="font-semibold">{member.name}</h3><p className="text-xs text-community-muted">{member.role}</p></div></article>)}</div></section>;
+  return <section className="community-panel p-6 sm:p-8"><SectionHeading eyebrow="10,000+ readers" title="Members of the reading room" action={<div className="relative hidden sm:block"><Search className="absolute left-3 top-2.5 size-4 text-community-muted" /><input aria-label="Search members" placeholder="Search readers" className="h-9 border border-community-border bg-community-soft pl-9 pr-3 text-sm outline-none focus:border-community-gold" /></div>} /><div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{members.map((member) => <article key={member.name} className="flex items-center gap-3 border border-community-border bg-community-soft p-4"><div className="grid size-11 place-items-center rounded-full bg-community-purple font-semibold">{member.initials}</div><div><h3 className="font-semibold">{member.name}</h3><p className="text-xs text-community-muted">{member.role}</p></div></article>)}</div></section>;
 }

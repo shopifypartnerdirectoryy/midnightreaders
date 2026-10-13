@@ -52,8 +52,23 @@ function Index() {
               </div>
             </div>
           </div>
+          <div className="relative mt-10 flex flex-wrap items-center gap-x-10 gap-y-5 border-t border-border/60 pt-6">
+            <div>
+              <p className="font-serif text-3xl font-semibold text-gold">10,000+</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">members reading worldwide</p>
+            </div>
+            <div>
+              <p className="font-serif text-3xl font-semibold">{programs.length}</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">programs &amp; challenges</p>
+            </div>
+            <div>
+              <p className="font-serif text-3xl font-semibold">13</p>
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">months of reading</p>
+            </div>
+          </div>
         </div>
       </section>
+
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="glass grid gap-6 rounded-[2rem] p-8 md:grid-cols-[1fr_1.4fr] md:p-10">
