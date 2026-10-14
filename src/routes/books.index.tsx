@@ -51,7 +51,10 @@ function BooksPage() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-14">
       <span className="chip">Book Discovery</span>
-      <h1 className="mt-4 font-serif text-5xl font-semibold tracking-tight">Find your next book</h1>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="font-serif text-5xl font-semibold tracking-tight">Find your next book</h1>
+        <Link to="/submit" className="btn-ink">＋ Add my book</Link>
+      </div>
 
       {top.length > 0 && (
         <div className="glass-lg mt-8 rounded-[2rem] p-6 md:p-8">

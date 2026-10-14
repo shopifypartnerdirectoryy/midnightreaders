@@ -26,9 +26,12 @@ export function SiteHeader() {
           {isAdmin && <Link to="/admin" className="hover:text-foreground">Admin</Link>}
           <Link to="/search" aria-label="Search" className="hover:text-foreground">⌕ Search</Link>
         </nav>
-        {user
-          ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
-          : <Link to="/auth" className="btn-ink !px-5 !py-2.5">Join the club</Link>}
+        <div className="flex shrink-0 flex-wrap justify-end gap-2">
+          {user && <Link to="/submit" className="btn-glass !px-3 !py-2.5">＋ Add my book</Link>}
+          {user
+            ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
+            : <Link to="/auth" className="btn-ink !px-5 !py-2.5">Join the club</Link>}
+        </div>
       </header>
       <CommunityPulse />
     </div>
