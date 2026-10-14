@@ -3,7 +3,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/submit")({
-  head: () => ({ meta: [{ title: "Submit Your Book — Midnight Readers Club" }, { name: "robots", content: "noindex" }] }),
+  head: () => ({ meta: [{ title: "Add Your Book — Midnight Readers Club" }, { name: "description", content: "Submit your book for review and inclusion in Midnight Readers Club programs." }, { property: "og:title", content: "Add Your Book — Midnight Readers Club" }, { property: "og:description", content: "Share your book with the Midnight Readers Club editorial team." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
   component: Submit,
 });
 

@@ -11,7 +11,7 @@ export function SiteHeader() {
   const { user, isAdmin } = useAuth();
   return (
     <div className="sticky top-4 z-30 px-4">
-      <header className="glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl px-6 py-3">
+      <header className="glass mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 rounded-2xl px-6 py-3">
         <Link to="/" className="flex items-center gap-2.5">
           <span className="grid size-9 place-items-center rounded-xl bg-primary text-lg text-mint">☾</span>
           <span className="font-serif text-lg font-semibold tracking-tight">Midnight Readers Club</span>
@@ -26,9 +26,12 @@ export function SiteHeader() {
           {isAdmin && <Link to="/admin" className="hover:text-foreground">Admin</Link>}
           <Link to="/search" aria-label="Search" className="hover:text-foreground">⌕ Search</Link>
         </nav>
-        {user
-          ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
-          : <Link to="/auth" className="btn-ink !px-5 !py-2.5">Join the club</Link>}
+        <div className="flex w-full flex-wrap justify-end gap-2 sm:w-auto">
+          {user && <Link to="/submit" className="btn-glass !px-3 !py-2.5">＋ Add my book</Link>}
+          {user
+            ? <Link to="/dashboard" className="btn-ink !px-5 !py-2.5">My MRC</Link>
+            : <Link to="/auth" className="btn-ink !px-5 !py-2.5">Join the club</Link>}
+        </div>
       </header>
       <CommunityPulse />
     </div>
