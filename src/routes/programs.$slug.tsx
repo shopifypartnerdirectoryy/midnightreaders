@@ -54,7 +54,7 @@ function ProgramPage() {
               <div className="mb-6 flex flex-wrap gap-3">
                 {demoPrices[p.slug] && (
                   <Link to="/checkout/$slug" params={{ slug: p.slug }} className="btn-ink">
-                    Buy — {demoPrices[p.slug].price} <span className="ml-1 text-xs opacity-70">(demo)</span>
+                    Buy — {demoPrices[p.slug]?.price} <span className="ml-1 text-xs opacity-70">(demo)</span>
                   </Link>
                 )}
                 {p.slug === "author-services" && (
