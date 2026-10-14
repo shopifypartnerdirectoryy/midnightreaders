@@ -11,4 +11,4 @@
 - [x] Community Hub — group membership, discussions, BOTM polls, buddy reads, members and moderation overview
 - [ ] Platform-controlled activity accounts — declined as specified (fake reader activity); offer labelled official MRC content instead
 - [x] Labelled DEMO '9,000+ online & reading' stat in header
-- [ ] Book reading-room demo presence and discoverable Add my book entry points
+- [x] Book reading-room demo presence and discoverable Add my book entry points
