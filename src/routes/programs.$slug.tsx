@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { programs, toneChip } from "@/lib/mrc-data";
 import { InquiryForm } from "@/components/inquiry-form";
+import { demoPrices } from "@/lib/demo-pricing";
 
 export const Route = createFileRoute("/programs/$slug")({
   loader: ({ params }) => {
@@ -50,9 +51,16 @@ function ProgramPage() {
             <Link to="/spikes" className="btn-ink">{p.cta}</Link>
           ) : (
             <>
-              {p.slug === "author-services" && (
-                <Link to="/submit" className="btn-ink mb-6">Submit your book</Link>
-              )}
+              <div className="mb-6 flex flex-wrap gap-3">
+                {demoPrices[p.slug] && (
+                  <Link to="/checkout/$slug" params={{ slug: p.slug }} className="btn-ink">
+                    Buy — {demoPrices[p.slug]?.price} <span className="ml-1 text-xs opacity-70">(demo)</span>
+                  </Link>
+                )}
+                {p.slug === "author-services" && (
+                  <Link to="/submit" className="btn-glass">Submit your book</Link>
+                )}
+              </div>
               <h2 className="font-serif text-xl font-semibold">{p.slug === "author-services" ? "Ask about a service" : "Register your interest"}</h2>
               <p className={`mb-4 mt-1 text-sm ${p.dark ? "opacity-70" : "text-muted-foreground"}`}>
                 {p.access === "For authors" ? "Tell us about your book and which service you need." : "Online payment opens soon — leave your details and we'll email you first."}
