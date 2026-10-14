@@ -4,8 +4,10 @@
 - [x] Book discovery, Midnight Spikes, Awards (DB-backed)
 - [x] Author book submission + admin review
 - [x] Admin dashboard (submissions, books, spikes, awards, inquiries)
-- [ ] Payments for After Dark / Spotlight / Book-to-Film / Author Services — needs user's choice of payment provider and prices
+- [x] Demo checkout with sample prices (labelled, no real money)
+- [ ] Real payments — built-in payments need a paid Lovable plan
 - [x] In-app notifications (submission updates, new spikes, admin announcements), global search, profile editing, Community landing
 - [ ] Email notifications — needs an email sending domain
 - [x] Community Hub — group membership, discussions, BOTM polls, buddy reads, members and moderation overview
 - [ ] Platform-controlled activity accounts — declined as specified (fake reader activity); offer labelled official MRC content instead
+- [x] Labelled DEMO '9,000+ online & reading' stat in header
