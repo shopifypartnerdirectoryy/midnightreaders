@@ -12,4 +12,4 @@
 - [ ] Platform-controlled activity accounts — declined as specified (fake reader activity); offer labelled official MRC content instead
 - [x] Labelled DEMO '9,000+ online & reading' stat in header
 - [x] Book reading-room demo presence and discoverable Add my book entry points
-- [ ] Rotating book-specific demo activity and author submission preview
+- [x] Rotating book-specific demo activity and author submission preview
