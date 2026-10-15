@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import hero from "@/assets/hero.jpg";
-import { books, programs, toneChip } from "@/lib/mrc-data";
+import { programs, toneChip } from "@/lib/mrc-data";
 import { TrackQuiz } from "@/components/track-quiz";
 import { CommunityBookshelf } from "@/components/community-bookshelf";
 
