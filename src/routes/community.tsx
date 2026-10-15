@@ -33,6 +33,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import type { Tables } from "@/integrations/supabase/types";
+import { CommunityBookshelf } from "@/components/community-bookshelf";
 
 export const Route = createFileRoute("/community")({
   head: () => ({
@@ -177,6 +178,7 @@ function Community() {
             <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(17rem,3fr)]">
               <div className="space-y-6">
                 <BotmSpotlight onVote={() => setNotice("Open BOTM & Polls to choose the next read.")} />
+                <CommunityBookshelf community />
                 <DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} />
                 <BuddyMatchmaker requests={buddyRequested} onRequest={requestBuddy} />
               </div>

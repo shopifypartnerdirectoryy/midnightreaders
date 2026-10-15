@@ -13,3 +13,4 @@
 - [x] Labelled DEMO '9,000+ online & reading' stat in header
 - [x] Book reading-room demo presence and discoverable Add my book entry points
 - [x] Rotating book-specific demo activity and author submission preview
+- [x] Add supplied real-author books and covers to Community and featured discovery

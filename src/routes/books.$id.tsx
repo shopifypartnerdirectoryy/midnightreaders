@@ -7,6 +7,8 @@ import { fetchBookStats, isSpoiler, completionRate, type BookStat } from "@/lib/
 import { AmbientPlayer } from "@/components/ambient-player";
 import { BookReadingRoom } from "@/components/book-reading-room";
 import type { Tables } from "@/integrations/supabase/types";
+import { communityBookLinks } from "@/lib/community-books";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/books/$id")({
   head: () => ({
@@ -81,6 +83,7 @@ function BookPage() {
           <h1 className="mt-2 font-serif text-4xl font-semibold tracking-tight">{book.title}</h1>
           <p className="mt-1 text-muted-foreground">{book.author_name}{book.genre ? ` · ${book.genre}` : ""}</p>
           <p className="mt-4 leading-relaxed">{book.description}</p>
+          {communityBookLinks[id] && <Button asChild variant="outline" className="mt-4"><a href={communityBookLinks[id]} target="_blank" rel="noopener noreferrer">View on Amazon ↗</a></Button>}
           <BookReadingRoom bookId={id} />
           <div className="mt-5 flex flex-wrap gap-2 text-xs">
             <span className="chip">🔥 {stat?.readers ?? 0} {stat?.readers === 1 ? "reader" : "readers"} on MRC</span>
