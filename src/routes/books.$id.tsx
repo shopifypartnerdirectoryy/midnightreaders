@@ -9,6 +9,8 @@ import { BookReadingRoom } from "@/components/book-reading-room";
 import type { Tables } from "@/integrations/supabase/types";
 import { communityBookLinks } from "@/lib/community-books";
 import { Button } from "@/components/ui/button";
+import { demoBookStats, demoBotComments } from "@/lib/demo-book-stats";
+import { DEMO_ACTIVITY_INTERVAL } from "@/lib/demo-book-activity";
 
 export const Route = createFileRoute("/books/$id")({
   head: () => ({
@@ -34,6 +36,8 @@ function BookPage() {
   const [revealed, setRevealed] = useState<Set<string>>(new Set());
   const [draft, setDraft] = useState({ chapter: 1, body: "" });
 
+  const [tick, setTick] = useState(0);
+  useEffect(() => { setTick(0); const t = setInterval(() => setTick((v) => v + 1), DEMO_ACTIVITY_INTERVAL); return () => clearInterval(t); }, [id]);
   async function loadComments() {
     const { data } = await supabase.from("book_comments").select("*").eq("book_id", id).order("chapter").order("created_at");
     setComments(data ?? []);
@@ -86,9 +90,12 @@ function BookPage() {
           {communityBookLinks[id] && <Button asChild variant="outline" className="mt-4"><a href={communityBookLinks[id]} target="_blank" rel="noopener noreferrer">View on Amazon ↗</a></Button>}
           <BookReadingRoom bookId={id} />
           <div className="mt-5 flex flex-wrap gap-2 text-xs">
-            <span className="chip">🔥 {stat?.readers ?? 0} {stat?.readers === 1 ? "reader" : "readers"} on MRC</span>
-            <span className="chip">{stat?.comments ?? 0} chapter comments</span>
-            <span className="chip">{completionRate(stat)}% completion</span>
+            {(() => { const d = demoBookStats(id, tick); return (<>
+              <span className="chip">🔥 {d.readers.toLocaleString()} readers <b className="text-gold">Demo</b></span>
+              <span className="chip">{d.comments.toLocaleString()} chapter comments <b className="text-gold">Demo</b></span>
+              <span className="chip">{d.completion}% completion <b className="text-gold">Demo</b></span>
+            </>); })()}
+            <span className="chip opacity-70">Real: {stat?.readers ?? 0} {stat?.readers === 1 ? "reader" : "readers"} · {stat?.comments ?? 0} comments · {completionRate(stat)}%</span>
           </div>
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div className="glass rounded-2xl p-5">
@@ -112,6 +119,14 @@ function BookPage() {
       <div className="glass mt-10 rounded-[2rem] p-8">
         <h2 className="font-serif text-2xl font-semibold">Spoiler-safe chapter threads</h2>
         <p className="mt-1 text-sm text-muted-foreground">Comments from chapters past your logged progress stay blurred.</p>
+        <ul className="mt-5 grid gap-3">
+          {demoBotComments(id, tick, total).map((c) => (
+            <li key={c.id} className="glass rounded-xl p-4">
+              <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">{c.author}</span> · Chapter {c.chapter} · <b className="text-gold">Demo bot</b></p>
+              <p className="mt-1 text-sm">{c.body}</p>
+            </li>
+          ))}
+        </ul>
         {!user ? <p className="mt-4 text-sm"><Link to="/auth" className="text-accent">Sign in</Link> to read and join chapter threads.</p> : (
           <>
             <form onSubmit={post} className="mt-5 grid gap-2 sm:grid-cols-[140px_1fr_auto]">
