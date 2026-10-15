@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import hero from "@/assets/hero.jpg";
 import { books, programs, toneChip } from "@/lib/mrc-data";
 import { TrackQuiz } from "@/components/track-quiz";
+import { CommunityBookshelf } from "@/components/community-bookshelf";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,23 +97,7 @@ function Index() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <h2 className="font-serif text-3xl font-semibold tracking-tight">Featured books</h2>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {books.map((b) => (
-            <article key={b.title} className="glass overflow-hidden rounded-2xl">
-              <img src={b.cover} alt={`${b.title} cover`} loading="lazy" width={704} height={944} className="aspect-[3/4] w-full object-cover" />
-              <div className="p-5">
-                <span className="text-xs font-semibold uppercase tracking-widest text-accent">{b.program}</span>
-                <h3 className="mt-2 font-serif text-lg font-semibold">{b.title}</h3>
-                <p className="text-sm text-muted-foreground">{b.author} · {b.genre}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{b.blurb}</p>
-                <span className="mt-3 inline-block text-sm font-semibold">View Book →</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <CommunityBookshelf />
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="glass-lg grid gap-6 rounded-[2rem] p-8 md:grid-cols-[1fr_1.2fr] md:p-10">
