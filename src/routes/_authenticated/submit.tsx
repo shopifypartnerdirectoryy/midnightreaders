@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { BookReadingRoom } from "@/components/book-reading-room";
 
 export const Route = createFileRoute("/_authenticated/submit")({
   head: () => ({ meta: [{ title: "Add Your Book — Midnight Readers Club" }, { name: "description", content: "Submit your book for review and inclusion in Midnight Readers Club programs." }, { property: "og:title", content: "Add Your Book — Midnight Readers Club" }, { property: "og:description", content: "Share your book with the Midnight Readers Club editorial team." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }, { name: "robots", content: "noindex" }] }),
@@ -27,6 +28,7 @@ function Submit() {
     <section className="mx-auto max-w-2xl px-4 py-14"><div className="glass-lg rounded-[2rem] p-8">
       <h1 className="font-serif text-3xl font-semibold">Submission received</h1>
       <p className="mt-2 text-muted-foreground">Our team will review it. Track its status on your dashboard.</p>
+      <BookReadingRoom bookId={f.title} submissionPreview />
       <Link to="/dashboard" className="btn-ink mt-6">Go to dashboard</Link>
     </div></section>
   );

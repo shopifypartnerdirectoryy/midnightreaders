@@ -13,4 +13,4 @@
 - Glass surfaces use .glass/.glass-lg/.glass-ink and .btn-* classes in styles.css — keeps the look consistent.
 - Data access uses the browser client with RLS; admin rights come from user_roles via has_role — first signup becomes admin.
 - Community interactions persist in dedicated RLS-protected tables while official MRC editorial items remain explicit static seed content — prevents fabricated member activity.
-- Book reading-room demo presence is a separate display component, never part of book_stats or stored member activity — keeps simulated presence separate from real engagement.
+- Book reading-room demo presence uses a shared display-only scenario function with a cleaned-up per-book timer; reuse it for the post-submission preview and never persist it in book_stats or member activity — keeps simulated presence separate from real engagement.
