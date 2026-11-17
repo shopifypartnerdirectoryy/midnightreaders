@@ -14,4 +14,4 @@
 - [x] Book reading-room demo presence and discoverable Add my book entry points
 - [x] Rotating book-specific demo activity and author submission preview
 - [x] Add supplied real-author books and covers to Community and featured discovery
-- [ ] Community access applications — private real-payment proof or existing ID, admin review, unique member IDs
+- [x] Community access applications — private real-payment proof or existing ID, admin review, unique member IDs
