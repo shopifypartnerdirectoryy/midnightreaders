@@ -27,6 +27,7 @@ import { Route as CheckoutSlugRouteImport } from './routes/checkout.$slug'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
+import { Route as AuthenticatedCommunityJoinRouteImport } from './routes/_authenticated/community.join'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -117,6 +118,12 @@ const ProgramsSlugRoute = ProgramsSlugRouteImport.update({
   path: '/programs/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCommunityJoinRoute =
+  AuthenticatedCommunityJoinRouteImport.update({
+    id: '/community/join',
+    path: '/community/join',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -136,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books/': typeof BooksIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -155,6 +163,7 @@ export interface FileRoutesByTo {
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books': typeof BooksIndexRoute
   '/programs': typeof ProgramsIndexRoute
+  '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -176,6 +185,7 @@ export interface FileRoutesById {
   '/programs/$slug': typeof ProgramsSlugRoute
   '/books/': typeof BooksIndexRoute
   '/programs/': typeof ProgramsIndexRoute
+  '/_authenticated/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/programs/$slug'
     | '/books/'
     | '/programs/'
+    | '/community/join'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/programs/$slug'
     | '/books'
     | '/programs'
+    | '/community/join'
   id:
     | '__root__'
     | '/'
@@ -236,6 +248,7 @@ export interface FileRouteTypes {
     | '/programs/$slug'
     | '/books/'
     | '/programs/'
+    | '/_authenticated/community/join'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/community/join': {
+      id: '/_authenticated/community/join'
+      path: '/community/join'
+      fullPath: '/community/join'
+      preLoaderRoute: typeof AuthenticatedCommunityJoinRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -391,12 +411,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedSubmitRoute: typeof AuthenticatedSubmitRoute
+  AuthenticatedCommunityJoinRoute: typeof AuthenticatedCommunityJoinRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedSubmitRoute: AuthenticatedSubmitRoute,
+  AuthenticatedCommunityJoinRoute: AuthenticatedCommunityJoinRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

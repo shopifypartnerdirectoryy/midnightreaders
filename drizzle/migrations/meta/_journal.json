@@ -43,6 +43,27 @@
       "when": 1794568138265,
       "tag": "0005_scope_community_read_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794924885704,
+      "tag": "0006_community_access_applications",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794924899043,
+      "tag": "0007_validate_community_applications",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794924934661,
+      "tag": "0008_require_review_for_community_joins",
+      "breakpoints": true
     }
   ]
 }

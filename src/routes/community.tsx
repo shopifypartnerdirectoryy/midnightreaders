@@ -77,6 +77,8 @@ function Community() {
   const { user, ready } = useAuth();
   const navigate = useNavigate();
   const [joined, setJoined] = useState(false);
+  const [memberId, setMemberId] = useState<string | null>(null);
+  const [applicationPending, setApplicationPending] = useState(false);
   const [category, setCategory] = useState<Category>("All");
   const [discussions, setDiscussions] = useState<Discussion[]>(editorialDiscussions);
   const [vote, setVote] = useState<string | null>(null);
@@ -86,12 +88,15 @@ function Community() {
   useEffect(() => {
     if (!user) return;
     void Promise.all([
-      supabase.from("community_members").select("user_id").eq("user_id", user.id).maybeSingle(),
+      supabase.from("community_members").select("user_id,member_id").eq("user_id", user.id).maybeSingle(),
       supabase.from("community_discussions").select("id,author_name,body,category,created_at,title").order("created_at", { ascending: false }).limit(12),
       supabase.from("community_poll_votes").select("choice").eq("user_id", user.id).eq("poll_key", "november-2026").maybeSingle(),
       supabase.from("community_buddy_requests").select("book_title").eq("user_id", user.id),
-    ]).then(([memberResult, discussionResult, voteResult, buddyResult]) => {
+      supabase.from("community_applications").select("status").eq("user_id", user.id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+    ]).then(([memberResult, discussionResult, voteResult, buddyResult, applicationResult]) => {
       setJoined(Boolean(memberResult.data));
+      setMemberId(memberResult.data?.member_id ?? null);
+      setApplicationPending(applicationResult.data?.status === "pending");
       setDiscussions([...(discussionResult.data ?? []), ...editorialDiscussions]);
       setVote(voteResult.data?.choice ?? null);
       setBuddyRequested((buddyResult.data ?? []).map((item) => item.book_title));
@@ -103,14 +108,12 @@ function Community() {
     [category, discussions],
   );
 
-  async function joinGroup() {
+  function joinGroup() {
     if (!user) {
       navigate({ to: "/auth" });
       return;
     }
-    const { error } = await supabase.from("community_members").upsert({ user_id: user.id });
-    if (error) setNotice("We couldn’t join you just now. Please try again.");
-    else { setJoined(true); setNotice("Welcome to The Midnight Readers."); }
+    navigate({ to: "/community/join" });
   }
 
   async function castVote(choice: string) {
@@ -144,14 +147,15 @@ function Community() {
                   <span className="community-chip"><Users /> Public Group</span>
                   <span className="community-chip"><Circle className="fill-community-mint text-community-mint" /> 10,000+ Members</span>
                   <span className="community-chip community-chip-gold"><BookOpen /> Active BOTM</span>
+                  {memberId && <span className="community-chip community-chip-gold"><ShieldCheck /> {memberId}</span>}
                 </div>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-community-gold">Midnight Readers Club Community</p>
                 <h1 className="mt-2 max-w-3xl font-serif text-5xl font-semibold leading-none sm:text-6xl lg:text-7xl">The Midnight Readers</h1>
                 <p className="mt-4 max-w-2xl text-base leading-relaxed text-community-muted sm:text-lg">A global reading room for thoughtful conversations, shared discoveries, and books that stay with us.</p>
               </div>
               <div className="flex flex-wrap gap-3">
-                <Button onClick={joinGroup} disabled={!ready || joined} className="h-11 bg-community-gold px-6 text-community-ink hover:bg-community-gold/90">
-                  {joined ? <><Check /> Joined</> : <><Sparkles /> Join Group</>}
+                <Button onClick={joinGroup} disabled={!ready || joined || applicationPending} className="h-11 bg-community-gold px-6 text-community-ink hover:bg-community-gold/90">
+                  {joined ? <><Check /> Joined</> : applicationPending ? <><ShieldCheck /> Application pending</> : <><Sparkles /> Request access</>}
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild><Button variant="outline" className="h-11 border-community-border bg-community-surface/80 px-6 text-community-foreground hover:bg-community-soft hover:text-community-foreground"><ShieldCheck /> Group Rules</Button></DialogTrigger>

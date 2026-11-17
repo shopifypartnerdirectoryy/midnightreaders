@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
 
-const tabs = ["Overview", "Submissions", "Books", "Spikes", "Awards", "Inquiries", "Announcements"] as const;
+const tabs = ["Overview", "Access requests", "Submissions", "Books", "Spikes", "Awards", "Inquiries", "Announcements"] as const;
 
 function Admin() {
   const { isAdmin, ready } = useAuth();
@@ -19,10 +19,11 @@ function Admin() {
   const [spikes, setSpikes] = useState<Tables<"spikes">[]>([]);
   const [awards, setAwards] = useState<Tables<"awards">[]>([]);
   const [inq, setInq] = useState<Tables<"inquiries">[]>([]);
+  const [applications, setApplications] = useState<Tables<"community_applications">[]>([]);
   const [counts, setCounts] = useState({ members: 0, enrolled: 0 });
 
   async function load() {
-    const [a, b, c, d, e, m, en] = await Promise.all([
+    const [a, b, c, d, e, m, en, applicationsResult] = await Promise.all([
       supabase.from("book_submissions").select("*").order("created_at", { ascending: false }),
       supabase.from("books").select("*").order("created_at", { ascending: false }),
       supabase.from("spikes").select("*").order("created_at", { ascending: false }),
@@ -30,14 +31,34 @@ function Admin() {
       supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("challenge_enrollments").select("user_id", { count: "exact", head: true }),
+      supabase.from("community_applications").select("*").order("created_at", { ascending: false }),
     ]);
     setSubs(a.data ?? []); setBooks(b.data ?? []); setSpikes(c.data ?? []); setAwards(d.data ?? []); setInq(e.data ?? []);
+    setApplications(applicationsResult.data ?? []);
     setCounts({ members: m.count ?? 0, enrolled: en.count ?? 0 });
   }
   useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
 
   if (!ready) return null;
   if (!isAdmin) return <div className="mx-auto max-w-md px-4 py-20 text-center"><p className="text-muted-foreground">Admins only.</p><Link to="/dashboard" className="btn-ink mt-4">My dashboard</Link></div>;
+
+  async function reviewApplication(application: Tables<"community_applications">, approve: boolean) {
+    const note = approve ? null : prompt("Note for the applicant (optional)");
+    const { data, error } = await supabase.rpc("review_community_application", {
+      _application_id: application.id,
+      _approve: approve,
+      ...(!approve && note !== null ? { _admin_note: note } : {}),
+    });
+    if (error) alert(error.message);
+    else if (approve) alert(`Access approved. Member ID: ${data}`);
+    void load();
+  }
+
+  async function viewPaymentProof(path: string) {
+    const { data, error } = await supabase.storage.from("community-payment-proofs").createSignedUrl(path, 300);
+    if (error || !data) alert("The receipt could not be opened. Please try again.");
+    else window.open(data.signedUrl, "_blank", "noopener,noreferrer");
+  }
 
   async function review(s: Tables<"book_submissions">, status: "approved" | "rejected") {
     const note = status === "rejected" ? prompt("Note for the author (optional)") : null;
@@ -55,10 +76,33 @@ function Admin() {
       </div>
       <div className="mt-6">
         {tab === "Overview" && (
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {[["Members", counts.members], ["In challenge", counts.enrolled], ["Pending books", subs.filter((s) => s.status === "pending").length], ["Books", books.length], ["Spikes", spikes.length], ["Inquiries", inq.length]].map(([l, v]) => (
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {[["Members", counts.members], ["In challenge", counts.enrolled], ["Pending access", applications.filter((a) => a.status === "pending").length], ["Pending books", subs.filter((s) => s.status === "pending").length], ["Books", books.length], ["Spikes", spikes.length], ["Inquiries", inq.length]].map(([l, v]) => (
               <div key={l} className="glass rounded-2xl p-5"><p className="text-xs uppercase tracking-widest text-muted-foreground">{l}</p><p className="mt-2 font-serif text-3xl font-semibold">{v}</p></div>
             ))}
+          </div>
+        )}
+        {tab === "Access requests" && (
+          <div className="grid gap-3">
+            {applications.map((application) => (
+              <article key={application.id} className="glass rounded-2xl p-5">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="font-semibold">{application.full_name} <span className="font-normal text-muted-foreground">· {application.email}</span></p>
+                    <p className="mt-1 text-sm capitalize text-muted-foreground">{application.application_type === "payment" ? "New membership · payment proof" : "Existing member ID"} · {application.status} · {new Date(application.created_at).toLocaleString()}</p>
+                    {application.existing_member_id && <p className="mt-3 font-mono text-sm font-semibold text-gold">{application.existing_member_id}</p>}
+                    {application.member_id && <p className="mt-2 text-sm">Assigned ID: <span className="font-mono font-semibold text-gold">{application.member_id}</span></p>}
+                    {application.message && <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{application.message}</p>}
+                    {application.admin_note && <p className="mt-2 text-sm text-muted-foreground">Admin note: {application.admin_note}</p>}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {application.payment_proof_path && <button onClick={() => void viewPaymentProof(application.payment_proof_path!)} className="btn-glass !py-2">View receipt</button>}
+                    {application.status === "pending" && <><button onClick={() => void reviewApplication(application, true)} className="btn-ink !py-2">Approve & issue ID</button><button onClick={() => void reviewApplication(application, false)} className="btn-glass !py-2">Reject</button></>}
+                  </div>
+                </div>
+              </article>
+            ))}
+            {!applications.length && <p className="text-muted-foreground">No community access requests yet.</p>}
           </div>
         )}
         {tab === "Submissions" && (

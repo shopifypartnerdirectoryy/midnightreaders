@@ -190,6 +190,57 @@ export type Database = {
         }
         Relationships: []
       }
+      community_applications: {
+        Row: {
+          admin_note: string | null
+          application_type: string
+          created_at: string
+          email: string
+          existing_member_id: string | null
+          full_name: string
+          id: string
+          member_id: string | null
+          message: string | null
+          payment_proof_path: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          application_type?: string
+          created_at?: string
+          email: string
+          existing_member_id?: string | null
+          full_name: string
+          id?: string
+          member_id?: string | null
+          message?: string | null
+          payment_proof_path?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Update: {
+          admin_note?: string | null
+          application_type?: string
+          created_at?: string
+          email?: string
+          existing_member_id?: string | null
+          full_name?: string
+          id?: string
+          member_id?: string | null
+          message?: string | null
+          payment_proof_path?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_buddy_requests: {
         Row: {
           availability: string
@@ -250,14 +301,17 @@ export type Database = {
       community_members: {
         Row: {
           joined_at: string
+          member_id: string | null
           user_id: string
         }
         Insert: {
           joined_at?: string
+          member_id?: string | null
           user_id: string
         }
         Update: {
           joined_at?: string
+          member_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -499,6 +553,14 @@ export type Database = {
         Returns: boolean
       }
       member_count: { Args: never; Returns: number }
+      review_community_application: {
+        Args: {
+          _admin_note?: string
+          _application_id: string
+          _approve: boolean
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

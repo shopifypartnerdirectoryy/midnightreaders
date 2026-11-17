@@ -1,0 +1,1 @@
+DROP POLICY "Members can join the community" ON public.community_members;
