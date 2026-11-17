@@ -180,7 +180,7 @@ function Community() {
 
           <TabsContent value="overview" className="mt-8">
             <div className="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(17rem,3fr)]">
-              <div className="space-y-6">
+              <div className="min-w-0 space-y-6">
                 <BotmSpotlight onVote={() => setNotice("Open BOTM & Polls to choose the next read.")} />
                 <CommunityBookshelf community />
                 <DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} />
@@ -315,7 +315,7 @@ function BuddyMatchmaker({ requests, onRequest, expanded = false }: { requests: 
 }
 
 function CommunitySidebar() {
-  return <aside className="space-y-5">
+  return <aside className="min-w-0 space-y-5">
     <section className="community-panel p-5"><div className="flex items-center gap-2 text-community-gold"><ShieldCheck className="size-4" /><h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Group rules</h2></div><ol className="mt-4 space-y-3">{rules.map((rule, index) => <li key={rule} className="flex gap-3 text-sm text-community-muted"><span className="font-serif text-community-gold">{index + 1}</span><span>{rule}</span></li>)}</ol></section>
     <section className="community-panel p-5"><div className="flex items-center justify-between"><h2 className="font-serif text-xl font-semibold">On our shelves</h2><Link to="/books" className="text-xs text-community-gold">View all</Link></div><div className="mt-4 grid grid-cols-3 gap-2">{[[cover1,"The Lantern Hour"],[cover2,"Salt & Signal"],[cover3,"Ember Field Notes"]].map(([src, title]) => <img key={title} src={src} alt={`${title} cover`} loading="lazy" width={704} height={944} className="aspect-[3/4] w-full object-cover" />)}</div><p className="mt-3 text-xs text-community-muted">Recently added by the MRC Book Team</p></section>
     <section className="community-panel p-5"><div className="flex items-center gap-2 text-community-purple-bright"><Flame className="size-4" /><h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Spikes & Challenges</h2></div><Link to="/spikes" className="mt-4 block border-l-2 border-community-purple pl-3"><p className="font-semibold">A scene that changed everything</p><p className="mt-1 text-xs text-community-muted">Today’s 10-minute reading prompt</p></Link><Link to="/programs/$slug" params={{ slug: "reading-challenge" }} className="mt-4 block border-l-2 border-community-gold pl-3"><p className="font-semibold">2026 Reading Challenge</p><p className="mt-1 text-xs text-community-muted">Set your goal and track your year</p></Link></section>
