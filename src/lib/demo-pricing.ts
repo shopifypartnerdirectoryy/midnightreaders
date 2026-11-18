@@ -6,5 +6,5 @@ export const demoPrices: Record<string, { price: string; period: string }> = {
   "author-services": { price: "$149", period: "per package" },
 };
 
-/** Demo-only "online now" figure, always shown with a DEMO label. */
+/** Preview-only "online now" figure, always shown with a visible Preview label. */
 export const DEMO_ONLINE = "9,000+";

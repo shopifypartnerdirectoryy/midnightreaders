@@ -18,7 +18,7 @@ const lines = [
   "The writing feels so honest. Highlighting half the page.",
   "Just joined the buddy read for this one — who's in?",
 ];
-const names = ["MRC Bot · Nova", "MRC Bot · Ember", "MRC Bot · Sage", "MRC Bot · Orion"];
+const names = ["Amara Okafor", "Daniel Reyes", "Sofia Bennett", "Elena Martins"];
 
 export function demoBotComments(bookId: string, tick: number, totalChapters: number, n = 3) {
   const seed = seedOf(bookId);

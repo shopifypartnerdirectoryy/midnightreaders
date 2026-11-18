@@ -23,7 +23,7 @@ export function CommunityPulse() {
           <span className="size-2 self-center rounded-full bg-mint" />
           <span className="font-serif text-lg font-semibold leading-none">{DEMO_ONLINE}</span>
           <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">online &amp; reading</span>
-          <span className="rounded-full border border-border px-1.5 text-[9px] font-bold uppercase tracking-wider text-muted-foreground">demo</span>
+          <span title="Sample online activity" className="rounded-full border border-border px-1.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">Preview</span>
         </span>
       </p>
     </div>

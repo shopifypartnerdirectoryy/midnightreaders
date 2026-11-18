@@ -89,11 +89,12 @@ function BookPage() {
           <p className="mt-4 leading-relaxed">{book.description}</p>
           {communityBookLinks[id] && <Button asChild variant="outline" className="mt-4"><a href={communityBookLinks[id]} target="_blank" rel="noopener noreferrer">View on Amazon ↗</a></Button>}
           <BookReadingRoom bookId={id} />
-          <div className="mt-5 flex flex-wrap gap-2 text-xs">
+          <div className="mt-5 flex flex-wrap items-center gap-2 text-xs">
             {(() => { const d = demoBookStats(id, tick); return (<>
-              <span className="chip">🔥 {d.readers.toLocaleString()} readers <b className="text-gold">Demo</b></span>
-              <span className="chip">{d.comments.toLocaleString()} chapter comments <b className="text-gold">Demo</b></span>
-              <span className="chip">{d.completion}% completion <b className="text-gold">Demo</b></span>
+              <span className="chip">🔥 {d.readers.toLocaleString()} readers</span>
+              <span className="chip">{d.comments.toLocaleString()} chapter comments</span>
+              <span className="chip">{d.completion}% completion</span>
+              <span className="rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">Preview data</span>
             </>); })()}
             <span className="chip opacity-70">Real: {stat?.readers ?? 0} {stat?.readers === 1 ? "reader" : "readers"} · {stat?.comments ?? 0} comments · {completionRate(stat)}%</span>
           </div>
@@ -122,7 +123,7 @@ function BookPage() {
         <ul className="mt-5 grid gap-3">
           {demoBotComments(id, tick, total).map((c) => (
             <li key={c.id} className="glass rounded-xl p-4">
-              <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">{c.author}</span> · Chapter {c.chapter} · <b className="text-gold">Demo bot</b></p>
+              <p className="text-xs text-muted-foreground"><span className="font-semibold text-foreground">{c.author}</span> · Chapter {c.chapter} · <span>Sample reader</span></p>
               <p className="mt-1 text-sm">{c.body}</p>
             </li>
           ))}
