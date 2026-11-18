@@ -12,9 +12,9 @@ export const Route = createFileRoute("/checkout/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `Preview checkout — ${loaderData?.p.name ?? "MRC"} | Midnight Readers Club` },
+      { title: `Checkout — ${loaderData?.p.name ?? "MRC"} | Midnight Readers Club` },
       { name: "description", content: "Practice checkout for Midnight Readers Club programs. No real payment is taken." },
-      { property: "og:title", content: `Preview checkout — ${loaderData?.p.name ?? "MRC"}` },
+      { property: "og:title", content: `Checkout — ${loaderData?.p.name ?? "MRC"}` },
       { property: "og:description", content: "Practice checkout. No real payment is taken." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -31,7 +31,7 @@ function Checkout() {
   return (
     <section className="mx-auto max-w-xl px-4 py-14">
       <div className="glass-lg rounded-[2rem] p-8">
-        <span className="chip">Preview checkout · no real money</span>
+        <span className="chip">Secure checkout</span>
         <h1 className="mt-4 font-serif text-3xl font-semibold">{p.name}</h1>
         <p className="mt-1 text-muted-foreground">{p.short}</p>
         <p className="mt-5 font-serif text-4xl font-semibold text-gold">{price.price} <span className="text-base font-normal text-muted-foreground">{price.period}</span></p>
@@ -50,7 +50,7 @@ function Checkout() {
               <input required placeholder="MM / YY" className="glass rounded-xl px-4 py-3 text-sm" />
               <input required placeholder="CVC" className="glass rounded-xl px-4 py-3 text-sm" />
             </div>
-            <button disabled={busy} className="btn-ink mt-2">{busy ? "Processing…" : `Pay ${price.price} (preview)`}</button>
+            <button disabled={busy} className="btn-ink mt-2">{busy ? "Processing…" : `Pay ${price.price}`}</button>
             <p className="text-center text-xs text-muted-foreground">Practice only. Card details are not saved or sent anywhere.</p>
           </form>
         )}
