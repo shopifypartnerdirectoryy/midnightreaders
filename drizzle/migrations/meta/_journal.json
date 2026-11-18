@@ -64,6 +64,13 @@
       "when": 1794924934661,
       "tag": "0008_require_review_for_community_joins",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794997504072,
+      "tag": "0009_admin_payment_proof_cleanup",
+      "breakpoints": true
     }
   ]
 }

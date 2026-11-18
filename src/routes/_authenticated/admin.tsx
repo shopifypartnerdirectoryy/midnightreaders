@@ -97,7 +97,7 @@ function Admin() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {application.payment_proof_path && <button onClick={() => void viewPaymentProof(application.payment_proof_path!)} className="btn-glass !py-2">View receipt</button>}
-                    {application.status === "pending" && <><button onClick={() => void reviewApplication(application, true)} className="btn-ink !py-2">Approve & issue ID</button><button onClick={() => void reviewApplication(application, false)} className="btn-glass !py-2">Reject</button></>}
+                    {application.status === "pending" && <><button onClick={() => void reviewApplication(application, true)} className="btn-ink !py-2">{application.application_type === "payment" ? "Approve & issue ID" : "Approve & link ID"}</button><button onClick={() => void reviewApplication(application, false)} className="btn-glass !py-2">Reject</button></>}
                   </div>
                 </div>
               </article>
