@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { coverSrc } from "@/lib/covers";
-import { fetchBookStats, isSpoiler, completionRate, type BookStat } from "@/lib/book-stats";
+import { fetchBookStats, isSpoiler, type BookStat } from "@/lib/book-stats";
 import { AmbientPlayer } from "@/components/ambient-player";
 import { BookReadingRoom } from "@/components/book-reading-room";
 import type { Tables } from "@/integrations/supabase/types";
@@ -95,7 +95,6 @@ function BookPage() {
               <span className="chip">{d.comments.toLocaleString()} chapter comments</span>
               <span className="chip">{d.completion}% completion</span>
             </>); })()}
-            <span className="chip opacity-70">Real: {stat?.readers ?? 0} {stat?.readers === 1 ? "reader" : "readers"} · {stat?.comments ?? 0} comments · {completionRate(stat)}%</span>
           </div>
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div className="glass rounded-2xl p-5">
