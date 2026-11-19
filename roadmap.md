@@ -15,3 +15,4 @@
 - [x] Rotating book-specific demo activity and author submission preview
 - [x] Add supplied real-author books and covers to Community and featured discovery
 - [x] Community access applications — private real-payment proof or existing ID, admin review, unique member IDs
+- [ ] Compare remaining platform work against the uploaded complete-platform brief; implement feasible gaps and identify external setup blockers
