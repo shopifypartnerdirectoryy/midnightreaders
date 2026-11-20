@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      author_profiles: {
+        Row: {
+          biography: string | null
+          country: string | null
+          created_at: string
+          display_name: string
+          id: string
+          newsletter_link: string | null
+          social_links: string | null
+          spotlight_qualified_at: string | null
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          biography?: string | null
+          country?: string | null
+          created_at?: string
+          display_name: string
+          id?: string
+          newsletter_link?: string | null
+          social_links?: string | null
+          spotlight_qualified_at?: string | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          biography?: string | null
+          country?: string | null
+          created_at?: string
+          display_name?: string
+          id?: string
+          newsletter_link?: string | null
+          social_links?: string | null
+          spotlight_qualified_at?: string | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       awards: {
         Row: {
           category: string | null
@@ -82,46 +124,187 @@ export type Database = {
           },
         ]
       }
+      book_review_helpful: {
+        Row: {
+          created_at: string
+          review_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          review_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          review_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_review_helpful_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "book_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      book_review_reports: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          id: string
+          reason: string
+          review_id: string
+          reviewed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          reason: string
+          review_id: string
+          reviewed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          id?: string
+          reason?: string
+          review_id?: string
+          reviewed_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_review_reports_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "book_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      book_reviews: {
+        Row: {
+          body: string
+          book_id: string
+          created_at: string
+          id: string
+          rating: number
+          reviewer_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          book_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          reviewer_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          book_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          reviewer_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "book_reviews_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       book_submissions: {
         Row: {
           admin_note: string | null
+          author_bio: string | null
+          author_country: string | null
           author_name: string
+          author_website: string | null
           buy_link: string | null
+          content_warnings: string | null
           cover_url: string | null
           created_at: string
           description: string | null
           genre: string | null
           id: string
+          language: string | null
+          newsletter_link: string | null
+          other_purchase_links: string | null
           programs: string[]
+          publication_date: string | null
+          series_info: string | null
+          social_links: string | null
           status: string
+          synopsis: string | null
           title: string
           user_id: string
         }
         Insert: {
           admin_note?: string | null
+          author_bio?: string | null
+          author_country?: string | null
           author_name: string
+          author_website?: string | null
           buy_link?: string | null
+          content_warnings?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           genre?: string | null
           id?: string
+          language?: string | null
+          newsletter_link?: string | null
+          other_purchase_links?: string | null
           programs?: string[]
+          publication_date?: string | null
+          series_info?: string | null
+          social_links?: string | null
           status?: string
+          synopsis?: string | null
           title: string
           user_id?: string
         }
         Update: {
           admin_note?: string | null
+          author_bio?: string | null
+          author_country?: string | null
           author_name?: string
+          author_website?: string | null
           buy_link?: string | null
+          content_warnings?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           genre?: string | null
           id?: string
+          language?: string | null
+          newsletter_link?: string | null
+          other_purchase_links?: string | null
           programs?: string[]
+          publication_date?: string | null
+          series_info?: string | null
+          social_links?: string | null
           status?: string
+          synopsis?: string | null
           title?: string
           user_id?: string
         }
@@ -130,6 +313,8 @@ export type Database = {
       books: {
         Row: {
           author_name: string
+          author_user_id: string | null
+          buy_link: string | null
           cover_url: string | null
           created_at: string
           description: string | null
@@ -137,13 +322,17 @@ export type Database = {
           featured: boolean
           genre: string | null
           id: string
+          other_purchase_links: string | null
           program: string | null
           publisher: string | null
+          synopsis: string | null
           title: string
           total_chapters: number
         }
         Insert: {
           author_name: string
+          author_user_id?: string | null
+          buy_link?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -151,13 +340,17 @@ export type Database = {
           featured?: boolean
           genre?: string | null
           id?: string
+          other_purchase_links?: string | null
           program?: string | null
           publisher?: string | null
+          synopsis?: string | null
           title: string
           total_chapters?: number
         }
         Update: {
           author_name?: string
+          author_user_id?: string | null
+          buy_link?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
@@ -165,8 +358,10 @@ export type Database = {
           featured?: boolean
           genre?: string | null
           id?: string
+          other_purchase_links?: string | null
           program?: string | null
           publisher?: string | null
+          synopsis?: string | null
           title?: string
           total_chapters?: number
         }
@@ -190,54 +385,125 @@ export type Database = {
         }
         Relationships: []
       }
+      community_application_events: {
+        Row: {
+          actor_user_id: string | null
+          application_id: string
+          created_at: string
+          id: string
+          new_status: string
+          note: string | null
+          previous_status: string | null
+        }
+        Insert: {
+          actor_user_id?: string | null
+          application_id: string
+          created_at?: string
+          id?: string
+          new_status: string
+          note?: string | null
+          previous_status?: string | null
+        }
+        Update: {
+          actor_user_id?: string | null
+          application_id?: string
+          created_at?: string
+          id?: string
+          new_status?: string
+          note?: string | null
+          previous_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_application_events_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "community_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_applications: {
         Row: {
           admin_note: string | null
           application_type: string
+          city: string | null
+          country: string | null
           created_at: string
           email: string
           existing_member_id: string | null
+          favorite_authors: string | null
+          favorite_genres: string[]
           full_name: string
           id: string
           member_id: string | null
           message: string | null
+          payer_name: string | null
+          payment_date: string | null
+          payment_method: string | null
           payment_proof_path: string | null
+          preferred_username: string | null
+          reading_interests: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           status: string
+          transaction_reference: string | null
           user_id: string
+          why_join: string | null
         }
         Insert: {
           admin_note?: string | null
           application_type?: string
+          city?: string | null
+          country?: string | null
           created_at?: string
           email: string
           existing_member_id?: string | null
+          favorite_authors?: string | null
+          favorite_genres?: string[]
           full_name: string
           id?: string
           member_id?: string | null
           message?: string | null
+          payer_name?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
           payment_proof_path?: string | null
+          preferred_username?: string | null
+          reading_interests?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          transaction_reference?: string | null
           user_id?: string
+          why_join?: string | null
         }
         Update: {
           admin_note?: string | null
           application_type?: string
+          city?: string | null
+          country?: string | null
           created_at?: string
           email?: string
           existing_member_id?: string | null
+          favorite_authors?: string | null
+          favorite_genres?: string[]
           full_name?: string
           id?: string
           member_id?: string | null
           message?: string | null
+          payer_name?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
           payment_proof_path?: string | null
+          preferred_username?: string | null
+          reading_interests?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          transaction_reference?: string | null
           user_id?: string
+          why_join?: string | null
         }
         Relationships: []
       }
@@ -339,6 +605,38 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      competition_book_votes: {
+        Row: {
+          book_id: string
+          campaign_key: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          book_id: string
+          campaign_key?: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          book_id?: string
+          campaign_key?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competition_book_votes_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       inquiries: {
         Row: {
@@ -535,6 +833,30 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      book_engagement_stats: {
+        Args: never
+        Returns: {
+          average_rating: number
+          book_id: string
+          challenge_comments: number
+          challenge_completions: number
+          challenge_unique_readers: number
+          comments: number
+          engagement_score: number
+          finished: number
+          rating_count: number
+          readers: number
+          review_count: number
+          votes: number
+        }[]
+      }
+      book_review_helpful_counts: {
+        Args: never
+        Returns: {
+          helpful_count: number
+          review_id: string
+        }[]
+      }
       book_stats: {
         Args: never
         Returns: {
@@ -543,6 +865,13 @@ export type Database = {
           finished: number
           readers: number
           week_activity: number
+        }[]
+      }
+      community_book_vote_counts: {
+        Args: { _campaign_key?: string }
+        Returns: {
+          book_id: string
+          votes: number
         }[]
       }
       has_role: {

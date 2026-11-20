@@ -71,6 +71,13 @@
       "when": 1794997504072,
       "tag": "0009_admin_payment_proof_cleanup",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795162504467,
+      "tag": "0010_book_reviews_author_profiles_competition",
+      "breakpoints": true
     }
   ]
 }
