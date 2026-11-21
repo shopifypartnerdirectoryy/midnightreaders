@@ -15,3 +15,4 @@
 - Community interactions persist in dedicated RLS-protected tables while official MRC editorial items remain explicit static seed content — prevents fabricated member activity.
 - Book reading-room demo presence uses a shared display-only scenario function with a cleaned-up per-book timer; reuse it for the post-submission preview and never persist it in book_stats or member activity — keeps simulated presence separate from real engagement.
 - Home and Community real-author shelves share CommunityBookshelf and read canonical book records; community-books stores only curated IDs and supplied purchase links — avoids duplicate catalog entries and divergent book details.
+- Public reader metrics and competition rankings use aggregate-only database functions, while individual reviews and participation records remain protected by ownership and approved-membership policies — keeps public totals useful without exposing private activity.

@@ -874,6 +874,13 @@ export type Database = {
           votes: number
         }[]
       }
+      community_poll_counts: {
+        Args: { _poll_key: string }
+        Returns: {
+          choice: string
+          vote_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
