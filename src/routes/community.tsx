@@ -9,7 +9,6 @@ import {
   Crown,
   Flame,
   MessageCircle,
-  Search,
   ShieldCheck,
   Sparkles,
   Star,
@@ -58,12 +57,6 @@ const editorialDiscussions: Discussion[] = [
   { id: "mrc-buddy", author_name: "MRC Community Team", category: "Buddy Reads", title: "Weekend readers: find your October reading partner", body: "Share your pace and time zone. We will keep matching open throughout the month.", created_at: "2026-10-03T21:15:00.000Z" },
 ];
 
-const buddyEditorial = [
-  { name: "Amara", initials: "AO", book: "The Lantern Hour", pace: "Steady", availability: "Evenings · GMT+1", match: "94%" },
-  { name: "Noah", initials: "NK", book: "Salt & Signal", pace: "Relaxed", availability: "Weekends · GMT", match: "88%" },
-  { name: "Ife", initials: "IA", book: "Ember Field Notes", pace: "Quick", availability: "Mornings · GMT+1", match: "82%" },
-];
-
 const moderators = [
   { name: "Midnight HQ", role: "Lead moderator", initials: "MH" },
   { name: "The Book Team", role: "BOTM curator", initials: "BT" },
@@ -82,8 +75,16 @@ function Community() {
   const [category, setCategory] = useState<Category>("All");
   const [discussions, setDiscussions] = useState<Discussion[]>(editorialDiscussions);
   const [vote, setVote] = useState<string | null>(null);
+  const [pollCounts, setPollCounts] = useState<Record<string, number>>({});
   const [buddyRequested, setBuddyRequested] = useState<string[]>([]);
   const [notice, setNotice] = useState("");
+
+  async function loadPollCounts() {
+    const { data } = await supabase.rpc("community_poll_counts", { _poll_key: "november-2026" });
+    setPollCounts(Object.fromEntries((data ?? []).map((row) => [row.choice, Number(row.vote_count)])));
+  }
+
+  useEffect(() => { void loadPollCounts(); }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -122,7 +123,7 @@ function Community() {
       { user_id: user.id, poll_key: "november-2026", choice },
       { onConflict: "user_id,poll_key" },
     );
-    if (!error) { setVote(choice); setNotice("Your November vote is in."); }
+    if (!error) { setVote(choice); setNotice("Your November vote is in."); void loadPollCounts(); }
   }
 
   async function requestBuddy(book: string) {
@@ -184,7 +185,7 @@ function Community() {
                 <BotmSpotlight onVote={() => setNotice("Open BOTM & Polls to choose the next read.")} />
                 <CommunityBookshelf community />
                 <DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} />
-                <BuddyMatchmaker requests={buddyRequested} onRequest={requestBuddy} />
+                <BuddyMatchmaker requests={buddyRequested} joined={joined} onRequest={requestBuddy} />
               </div>
               <CommunitySidebar />
             </div>
@@ -192,7 +193,7 @@ function Community() {
 
           <TabsContent value="discussions" className="mt-8"><DiscussionFeed category={category} setCategory={setCategory} discussions={visibleDiscussions} joined={joined} onCreated={(discussion) => setDiscussions((items) => [discussion, ...items])} expanded /></TabsContent>
           <TabsContent value="botm-and-polls" className="mt-8"><BotmAndPolls vote={vote} onVote={castVote} /></TabsContent>
-          <TabsContent value="buddy-reads" className="mt-8"><BuddyMatchmaker requests={buddyRequested} onRequest={requestBuddy} expanded /></TabsContent>
+          <TabsContent value="buddy-reads" className="mt-8"><BuddyMatchmaker requests={buddyRequested} joined={joined} onRequest={requestBuddy} expanded /></TabsContent>
           <TabsContent value="members" className="mt-8"><MembersDirectory /></TabsContent>
         </Tabs>
       </section>
@@ -214,8 +215,7 @@ function BotmSpotlight({ onVote }: { onVote: () => void }) {
           <h2 className="mt-5 font-serif text-3xl font-semibold">The Lantern Hour</h2>
           <p className="mt-1 text-sm text-community-muted">Elise Carter · Literary Fiction</p>
           <p className="mt-4 max-w-2xl leading-relaxed text-community-muted">A quiet novel about memory, set across one long winter night. This week we’re reading chapters 7–12 and tracing the moments its characters choose silence.</p>
-          <div className="mt-6 flex items-center justify-between text-xs"><span className="font-semibold">Community progress</span><span className="text-community-gold">62%</span></div>
-          <Progress value={62} className="mt-2 h-2 bg-community-soft [&>div]:bg-community-gold" />
+          <p className="mt-6 text-sm font-semibold text-community-gold">Current reading: chapters 7–12</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button className="bg-community-purple text-community-foreground hover:bg-community-purple/85"><MessageCircle /> Join discussion</Button>
             <Button onClick={onVote} variant="outline" className="border-community-border bg-transparent text-community-foreground hover:bg-community-soft hover:text-community-foreground">Vote next read <ArrowRight /></Button>
@@ -235,14 +235,14 @@ function DiscussionFeed({ category, setCategory, discussions, joined, onCreated,
         {(["All", "Announcements", "BOTM", "Buddy Reads"] as Category[]).map((item) => <Button key={item} size="sm" variant="ghost" onClick={() => setCategory(item)} className={category === item ? "bg-community-gold text-community-ink hover:bg-community-gold/90" : "border border-community-border text-community-muted hover:bg-community-soft hover:text-community-foreground"}>{item}</Button>)}
       </div>
       <div className="mt-3 divide-y divide-community-border">
-        {shown.map((item, index) => (
+        {shown.map((item) => (
           <article key={item.id} className="group flex gap-4 py-5">
             <div className="grid size-10 shrink-0 place-items-center rounded-md bg-community-soft text-sm font-semibold text-community-gold">{item.author_name.split(" ").map((word) => word[0]).join("").slice(0, 2)}</div>
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2"><span className="community-topic-label">{item.category}</span>{item.author_name.startsWith("MRC") && <span className="flex items-center gap-1 text-[11px] text-community-mint"><ShieldCheck className="size-3" /> Official MRC</span>}</div>
               <h3 className="mt-2 font-semibold group-hover:text-community-gold">{item.title}</h3>
               <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-community-muted">{item.body}</p>
-              <div className="mt-3 flex flex-wrap gap-4 text-xs text-community-muted"><span>{item.author_name}</span><span>{index * 7 + 12} replies</span><span>{index + 1}h ago</span></div>
+              <div className="mt-3 flex flex-wrap gap-4 text-xs text-community-muted"><span>{item.author_name}</span><time>{new Date(item.created_at).toLocaleDateString()}</time></div>
             </div>
             <ChevronRight className="mt-5 size-4 shrink-0 text-community-muted" />
           </article>
@@ -294,21 +294,31 @@ function NewTopicDialog({ joined, onCreated }: { joined: boolean; onCreated: (di
   </Dialog>;
 }
 
-function BuddyMatchmaker({ requests, onRequest, expanded = false }: { requests: string[]; onRequest: (book: string) => void; expanded?: boolean }) {
-  const list = expanded ? buddyEditorial : buddyEditorial.slice(0, 2);
+function BuddyMatchmaker({ requests, joined, onRequest, expanded = false }: { requests: string[]; joined: boolean; onRequest: (book: string) => void; expanded?: boolean }) {
+  const { user } = useAuth();
+  const [list, setList] = useState<Tables<"community_buddy_requests">[]>([]);
+  const [bookTitles, setBookTitles] = useState<string[]>([]);
+  const [selectedBook, setSelectedBook] = useState("");
+  useEffect(() => {
+    supabase.from("books").select("title").order("title").then(({ data }) => setBookTitles((data ?? []).map((book) => book.title)));
+    if (!joined) { setList([]); return; }
+    supabase.from("community_buddy_requests").select("*").order("created_at", { ascending: false }).limit(expanded ? 20 : 4).then(({ data }) => setList(data ?? []));
+  }, [joined, expanded]);
   return (
     <section className="community-panel p-6 sm:p-8">
-      <SectionHeading eyebrow="Read in company" title="Buddy reading matchmaker" action={<span className="hidden items-center gap-2 text-xs text-community-mint sm:flex"><Circle className="size-2 fill-community-mint" /> 34 readers matching</span>} />
+      <SectionHeading eyebrow="Read in company" title="Buddy reading matchmaker" />
       <p className="mt-2 text-sm text-community-muted">Match by book, reading pace and the times you like to check in.</p>
-      <div className={`mt-6 grid gap-3 ${expanded ? "lg:grid-cols-3" : "sm:grid-cols-2"}`}>
-        {list.map((buddy) => {
-          const requested = requests.includes(buddy.book);
-          return <article key={buddy.name} className="border border-community-border bg-community-soft p-4">
-            <div className="flex items-center gap-3"><div className="grid size-11 place-items-center rounded-full bg-community-purple font-semibold">{buddy.initials}</div><div><h3 className="font-semibold">{buddy.name}</h3><p className="text-xs text-community-mint">{buddy.match} reading match</p></div></div>
-            <p className="mt-4 text-sm font-medium">{buddy.book}</p><p className="mt-1 text-xs text-community-muted">{buddy.pace} pace · {buddy.availability}</p>
-            <Button onClick={() => onRequest(buddy.book)} disabled={requested} variant="outline" size="sm" className="mt-4 w-full border-community-border bg-transparent text-community-foreground hover:bg-community-purple hover:text-community-foreground">{requested ? <><Check /> Requested</> : <><Users /> Read together</>}</Button>
-          </article>;
-        })}
+      {joined ? <form className="mt-5 flex flex-wrap gap-3" onSubmit={(event) => { event.preventDefault(); if (selectedBook && !requests.includes(selectedBook)) onRequest(selectedBook); }}>
+        <select aria-label="Choose a book for a buddy read" required value={selectedBook} onChange={(event) => setSelectedBook(event.target.value)} className="h-10 min-w-0 flex-1 border border-community-border bg-community-soft px-3 text-sm outline-none focus:border-community-gold"><option value="">Choose a book</option>{bookTitles.map((title) => <option key={title}>{title}</option>)}</select>
+        <Button disabled={!selectedBook || requests.includes(selectedBook)} className="bg-community-gold text-community-ink hover:bg-community-gold/90"><Users /> {selectedBook && requests.includes(selectedBook) ? "Request shared" : "Share buddy-read request"}</Button>
+      </form> : <p className="mt-5 text-sm text-community-muted">Request community access to share and browse buddy-read requests.</p>}
+      <div className={`mt-5 grid gap-3 ${expanded ? "lg:grid-cols-3" : "sm:grid-cols-2"}`}>
+        {list.map((buddy) => <article key={buddy.id} className="border border-community-border bg-community-soft p-4">
+          <p className="text-xs uppercase tracking-wider text-community-muted">Member request</p>
+          <p className="mt-2 font-serif text-lg font-semibold">{buddy.book_title}</p>
+          <p className="mt-1 text-xs text-community-muted">{buddy.pace} pace · {buddy.availability}</p>
+        </article>)}
+        {!list.length && <p className="text-sm text-community-muted">No buddy-read requests yet.</p>}
       </div>
     </section>
   );
@@ -317,17 +327,16 @@ function BuddyMatchmaker({ requests, onRequest, expanded = false }: { requests: 
 function CommunitySidebar() {
   return <aside className="min-w-0 space-y-5">
     <section className="community-panel p-5"><div className="flex items-center gap-2 text-community-gold"><ShieldCheck className="size-4" /><h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Group rules</h2></div><ol className="mt-4 space-y-3">{rules.map((rule, index) => <li key={rule} className="flex gap-3 text-sm text-community-muted"><span className="font-serif text-community-gold">{index + 1}</span><span>{rule}</span></li>)}</ol></section>
-    <section className="community-panel p-5"><div className="flex items-center justify-between"><h2 className="font-serif text-xl font-semibold">On our shelves</h2><Link to="/books" className="text-xs text-community-gold">View all</Link></div><div className="mt-4 grid grid-cols-3 gap-2">{[[cover1,"The Lantern Hour"],[cover2,"Salt & Signal"],[cover3,"Ember Field Notes"]].map(([src, title]) => <img key={title} src={src} alt={`${title} cover`} loading="lazy" width={704} height={944} className="aspect-[3/4] w-full object-cover" />)}</div><p className="mt-3 text-xs text-community-muted">Recently added by the MRC Book Team</p></section>
-    <section className="community-panel p-5"><div className="flex items-center gap-2 text-community-purple-bright"><Flame className="size-4" /><h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Spikes & Challenges</h2></div><Link to="/spikes" className="mt-4 block border-l-2 border-community-purple pl-3"><p className="font-semibold">A scene that changed everything</p><p className="mt-1 text-xs text-community-muted">Today’s 10-minute reading prompt</p></Link><Link to="/programs/$slug" params={{ slug: "reading-challenge" }} className="mt-4 block border-l-2 border-community-gold pl-3"><p className="font-semibold">2026 Reading Challenge</p><p className="mt-1 text-xs text-community-muted">Set your goal and track your year</p></Link></section>
-    <section className="community-panel p-5"><h2 className="font-serif text-xl font-semibold">Moderators online</h2><div className="mt-4 space-y-3">{moderators.map((mod) => <div key={mod.name} className="flex items-center gap-3"><div className="relative grid size-9 place-items-center rounded-full bg-community-soft text-xs font-semibold">{mod.initials}<span className="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-community-ink bg-community-mint" /></div><div><p className="text-sm font-medium">{mod.name}</p><p className="text-xs text-community-muted">{mod.role}</p></div></div>)}</div></section>
+    <section className="community-panel p-5"><div className="flex items-center gap-2 text-community-purple-bright"><Flame className="size-4" /><h2 className="text-sm font-semibold uppercase tracking-[0.14em]">Spikes & Challenges</h2></div><Link to="/spikes" className="mt-4 block border-l-2 border-community-purple pl-3"><p className="font-semibold">Midnight Spikes</p><p className="mt-1 text-xs text-community-muted">Reading prompts and literary drops</p></Link><Link to="/programs/$slug" params={{ slug: "reading-challenge" }} className="mt-4 block border-l-2 border-community-gold pl-3"><p className="font-semibold">2026 Reading Challenge</p><p className="mt-1 text-xs text-community-muted">Set your goal and track your year</p></Link></section>
+    <section className="community-panel p-5"><h2 className="font-serif text-xl font-semibold">Community team</h2><div className="mt-4 space-y-3">{moderators.map((mod) => <div key={mod.name} className="flex items-center gap-3"><div className="grid size-9 place-items-center rounded-full bg-community-soft text-xs font-semibold">{mod.initials}</div><div><p className="text-sm font-medium">{mod.name}</p><p className="text-xs text-community-muted">{mod.role}</p></div></div>)}</div></section>
   </aside>;
 }
 
-function BotmAndPolls({ vote, onVote }: { vote: string | null; onVote: (choice: string) => void }) {
-  return <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"><BotmSpotlight onVote={() => document.getElementById("next-poll")?.scrollIntoView({ behavior: "smooth" })} /><section id="next-poll" className="community-panel p-6 sm:p-8"><p className="community-kicker"><Star /> November shortlist</p><h2 className="mt-4 font-serif text-3xl font-semibold">Choose our next read</h2><p className="mt-2 text-sm text-community-muted">Voting closes October 24. One vote per member.</p><div className="mt-6 grid gap-3">{pollOptions.map((option, index) => <Button key={option} onClick={() => onVote(option)} variant="outline" className={`h-auto justify-between border-community-border px-4 py-4 text-left text-community-foreground hover:bg-community-soft hover:text-community-foreground ${vote === option ? "bg-community-soft ring-1 ring-community-gold" : "bg-transparent"}`}><span><span className="block font-serif text-lg">{option}</span><span className="mt-1 block text-xs text-community-muted">{[38,34,28][index]}% of community votes</span></span>{vote === option ? <Check className="text-community-gold" /> : <Circle />}</Button>)}</div></section></div>;
+function BotmAndPolls({ vote, onVote, pollCounts }: { vote: string | null; onVote: (choice: string) => void; pollCounts: Record<string, number> }) {
+  const totalVotes = Object.values(pollCounts).reduce((total, count) => total + count, 0);
+  return <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]"><BotmSpotlight onVote={() => document.getElementById("next-poll")?.scrollIntoView({ behavior: "smooth" })} /><section id="next-poll" className="community-panel p-6 sm:p-8"><p className="community-kicker"><Star /> November shortlist</p><h2 className="mt-4 font-serif text-3xl font-semibold">Choose our next read</h2><p className="mt-2 text-sm text-community-muted">One vote per member · {totalVotes} votes cast</p><div className="mt-6 grid gap-3">{pollOptions.map((option) => { const count = pollCounts[option] ?? 0; const percentage = totalVotes ? Math.round((count / totalVotes) * 100) : 0; return <Button key={option} onClick={() => onVote(option)} variant="outline" className={`h-auto justify-between border-community-border px-4 py-4 text-left text-community-foreground hover:bg-community-soft hover:text-community-foreground ${vote === option ? "bg-community-soft ring-1 ring-community-gold" : "bg-transparent"}`}><span><span className="block font-serif text-lg">{option}</span><span className="mt-1 block text-xs text-community-muted">{count} votes · {percentage}%</span></span>{vote === option ? <Check className="text-community-gold" /> : <Circle />}</Button>; })}</div></section></div>;
 }
 
 function MembersDirectory() {
-  const members = [...moderators, { name: "Amara O.", role: "Literary fiction", initials: "AO" }, { name: "Noah K.", role: "Contemporary fiction", initials: "NK" }, { name: "Ife A.", role: "Essays & memoir", initials: "IA" }];
-  return <section className="community-panel p-6 sm:p-8"><SectionHeading eyebrow="10,000+ readers" title="Members of the reading room" action={<div className="relative hidden sm:block"><Search className="absolute left-3 top-2.5 size-4 text-community-muted" /><input aria-label="Search members" placeholder="Search readers" className="h-9 border border-community-border bg-community-soft pl-9 pr-3 text-sm outline-none focus:border-community-gold" /></div>} /><div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{members.map((member) => <article key={member.name} className="flex items-center gap-3 border border-community-border bg-community-soft p-4"><div className="grid size-11 place-items-center rounded-full bg-community-purple font-semibold">{member.initials}</div><div><h3 className="font-semibold">{member.name}</h3><p className="text-xs text-community-muted">{member.role}</p></div></article>)}</div></section>;
+  return <section className="community-panel p-6 sm:p-8"><SectionHeading eyebrow="Member privacy" title="Members of the reading room" /><p className="mt-4 max-w-2xl text-sm leading-relaxed text-community-muted">Individual member profiles are private. Public activity appears as aggregate counts, and no member directory details are shown without a shared profile.</p></section>;
 }

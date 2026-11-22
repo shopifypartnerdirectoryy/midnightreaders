@@ -15,4 +15,10 @@
 - [x] Rotating book-specific demo activity and author submission preview
 - [x] Add supplied real-author books and covers to Community and featured discovery
 - [x] Community access applications — private real-payment proof or existing ID, admin review, unique member IDs
-- [ ] Compare remaining platform work against the uploaded complete-platform brief; implement feasible gaps and identify external setup blockers
+- [x] Compare remaining platform work against the uploaded complete-platform brief; record remaining work in the approved plan
+- [ ] Replace simulated book and community activity with genuine records; remove stale external-brand mention
+- [ ] Add member ratings, written reviews, helpful marks, and review reports
+- [ ] Publish authentic Top 10 Books and Top 10 Authors challenge rankings
+- [ ] Complete author profiles and author-controlled submission management
+- [ ] Extend membership review details, history, and approval controls
+- [ ] Add manageable BOTM schedules, challenge milestones, and events

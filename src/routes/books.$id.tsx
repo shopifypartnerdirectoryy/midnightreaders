@@ -9,7 +9,6 @@ import { BookReadingRoom } from "@/components/book-reading-room";
 import type { Tables } from "@/integrations/supabase/types";
 import { communityBookLinks } from "@/lib/community-books";
 import { Button } from "@/components/ui/button";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/books/$id")({
   head: () => ({
@@ -72,7 +71,7 @@ function BookPage() {
 
   const total = book.total_chapters;
   async function saveProgress(c: number) {
-    if (!user) return;
+    if (!user || !isMember) return;
     const v = Math.max(0, Math.min(total, c));
     setChapter(v);
     await supabase.from("reading_progress").upsert({ user_id: user.id, book_id: id, chapter: v, updated_at: new Date().toISOString() });
@@ -151,7 +150,7 @@ function BookPage() {
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             <div className="glass rounded-2xl p-5">
               <p className="text-xs font-semibold uppercase tracking-widest text-mint">My reading progress</p>
-              {user ? (
+              {user && isMember ? (
                 <>
                   <p className="mt-2 font-serif text-2xl font-semibold">Chapter {chapter} of {total}</p>
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full bg-mint" style={{ width: `${(chapter / total) * 100}%` }} /></div>
@@ -160,7 +159,7 @@ function BookPage() {
                     <button onClick={() => saveProgress(chapter + 1)} className="btn-ink !py-1.5">+ Chapter</button>
                   </div>
                 </>
-              ) : <p className="mt-2 text-sm text-muted-foreground"><Link to="/auth" className="text-accent">Sign in</Link> to log your chapter.</p>}
+              ) : user ? <p className="mt-2 text-sm text-muted-foreground">Request community access to track your reading. <Link to="/community/join" className="text-accent">Request access</Link>.</p> : <p className="mt-2 text-sm text-muted-foreground"><Link to="/auth" className="text-accent">Sign in</Link> to log your chapter.</p>}
             </div>
             <AmbientPlayer />
           </div>

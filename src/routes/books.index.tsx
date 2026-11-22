@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { coverSrc } from "@/lib/covers";
 import { useAuth } from "@/hooks/use-auth";
-import { fetchBookStats, rankTopBooks, completionRate, type BookStat } from "@/lib/book-stats";
+import { fetchBookStats, fetchBookEngagementStats, rankTopBooks, completionRate, type BookStat, type BookEngagementStat } from "@/lib/book-stats";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const Route = createFileRoute("/books/")({
   head: () => ({
     meta: [
       { title: "Book Discovery — Midnight Readers Club" },
-      { name: "description", content: "Discover books from Midnight Readers Club and A Fourth Group & Co., see this week's top books and save them to your shelf." },
+      { name: "description", content: "Discover Midnight Readers Club books, explore real reader ratings and find your next reading-room discussion." },
       { property: "og:title", content: "Book Discovery — Midnight Readers Club" },
       { property: "og:description", content: "Search books by title, author and genre." },
       { property: "og:type", content: "website" },
@@ -24,13 +24,17 @@ function BooksPage() {
   const { user } = useAuth();
   const [books, setBooks] = useState<Tables<"books">[]>([]);
   const [stats, setStats] = useState<Record<string, BookStat>>({});
+  const [engagement, setEngagement] = useState<Record<string, BookEngagementStat>>({});
   const [q, setQ] = useState("");
+  const [genre, setGenre] = useState("All genres");
+  const [sort, setSort] = useState("newest");
   const [shelf, setShelf] = useState<Record<string, string>>({});
   const [preview, setPreview] = useState<Tables<"books"> | null>(null);
 
   useEffect(() => {
-    supabase.from("books").select("*").order("created_at", { ascending: true }).then(({ data }) => setBooks(data ?? []));
+    supabase.from("books").select("*").order("created_at", { ascending: false }).then(({ data }) => setBooks(data ?? []));
     fetchBookStats().then(setStats);
+    fetchBookEngagementStats().then(setEngagement);
   }, []);
   useEffect(() => {
     if (!user) return;
@@ -44,7 +48,12 @@ function BooksPage() {
   }
 
   const term = q.toLowerCase();
-  const list = books.filter((b) => [b.title, b.author_name, b.genre ?? ""].some((v) => v.toLowerCase().includes(term)));
+  const genres = Array.from(new Set(books.map((book) => book.genre).filter((value): value is string => Boolean(value)))).sort();
+  const list = books.filter((b) => [b.title, b.author_name, b.genre ?? ""].some((v) => v.toLowerCase().includes(term)) && (genre === "All genres" || b.genre === genre));
+    if (sort === "highest-rated") list.sort((a, b) => (engagement[b.id]?.average_rating ?? 0) - (engagement[a.id]?.average_rating ?? 0) || (engagement[b.id]?.rating_count ?? 0) - (engagement[a.id]?.rating_count ?? 0));
+    if (sort === "most-discussed") list.sort((a, b) => (stats[b.id]?.comments ?? 0) - (stats[a.id]?.comments ?? 0));
+    if (sort === "most-reviewed") list.sort((a, b) => (engagement[b.id]?.review_count ?? 0) - (engagement[a.id]?.review_count ?? 0));
+    if (sort === "most-read") list.sort((a, b) => (stats[b.id]?.readers ?? 0) - (stats[a.id]?.readers ?? 0));
   const top = rankTopBooks(books, stats);
   const maxAct = Math.max(1, ...top.map((b) => stats[b.id]?.week_activity ?? 0));
 
@@ -79,7 +88,11 @@ function BooksPage() {
         </div>
       )}
 
-      <input className="field mt-8 max-w-md" placeholder="Search title, author or genre" value={q} onChange={(e) => setQ(e.target.value)} />
+      <div className="mt-8 flex flex-wrap gap-3">
+        <input className="field min-w-0 flex-1 sm:max-w-md" placeholder="Search title, author or genre" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select className="field sm:w-48" aria-label="Filter by genre" value={genre} onChange={(event) => setGenre(event.target.value)}><option>All genres</option>{genres.map((item) => <option key={item}>{item}</option>)}</select>
+        <select className="field sm:w-48" aria-label="Sort books" value={sort} onChange={(event) => setSort(event.target.value)}><option value="newest">Newest</option><option value="highest-rated">Highest rated</option><option value="most-discussed">Most discussed</option><option value="most-reviewed">Most reviewed</option><option value="most-read">Most read</option></select>
+      </div>
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {list.map((b) => {
           const src = coverSrc(b.cover_url);
@@ -95,7 +108,7 @@ function BooksPage() {
                 <Link to="/books/$id" params={{ id: b.id }}><h2 className="mt-2 font-serif text-lg font-semibold">{b.title}</h2></Link>
                 <p className="text-sm text-muted-foreground">{b.author_name}{b.genre ? ` · ${b.genre}` : ""}</p>
                 <p className="mt-2 text-sm text-muted-foreground">{b.description}</p>
-                <p className="mt-3 text-xs text-muted-foreground">🔥 {s?.readers ?? 0} {s?.readers === 1 ? "reader" : "readers"} on MRC</p>
+                <p className="mt-3 text-xs text-muted-foreground">★ {engagement[b.id]?.rating_count ? `${engagement[b.id]?.average_rating.toFixed(1)} · ${engagement[b.id]?.rating_count} ratings` : "No ratings yet"} · {s?.readers ?? 0} readers</p>
                 <button onClick={() => setPreview(b)} className="mt-2 self-start text-sm font-semibold text-accent">Micro-preview →</button>
                 {user ? (
                   <div className="mt-4 flex flex-wrap gap-2">
