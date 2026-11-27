@@ -9,7 +9,7 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: Admin,
 });
 
-const tabs = ["Overview", "Access requests", "Submissions", "Books", "Spikes", "Awards", "Inquiries", "Announcements"] as const;
+const tabs = ["Overview", "Access requests", "Submissions", "Books", "Spikes", "Awards", "Inquiries", "Announcements", "Spotlight"] as const;
 
 function Admin() {
   const { isAdmin, ready } = useAuth();
@@ -20,10 +20,10 @@ function Admin() {
   const [awards, setAwards] = useState<Tables<"awards">[]>([]);
   const [inq, setInq] = useState<Tables<"inquiries">[]>([]);
   const [applications, setApplications] = useState<Tables<"community_applications">[]>([]);
-  const [counts, setCounts] = useState({ members: 0, enrolled: 0 });
+  const [counts, setCounts] = useState({ members: 0, enrolled: 0 });\n  const [authorProfiles, setAuthorProfiles] = useState<Tables<"author_profiles">[]>([]);
 
   async function load() {
-    const [a, b, c, d, e, m, en, applicationsResult] = await Promise.all([
+    const [a, b, c, d, e, m, en, applicationsResult, authorProfilesResult] = await Promise.all([
       supabase.from("book_submissions").select("*").order("created_at", { ascending: false }),
       supabase.from("books").select("*").order("created_at", { ascending: false }),
       supabase.from("spikes").select("*").order("created_at", { ascending: false }),
@@ -31,10 +31,10 @@ function Admin() {
       supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("challenge_enrollments").select("user_id", { count: "exact", head: true }),
-      supabase.from("community_applications").select("*").order("created_at", { ascending: false }),
+      supabase.from("community_applications").select("*").order("created_at", { ascending: false }),\n      supabase.from("author_profiles").select("*").order("display_name"),
     ]);
     setSubs(a.data ?? []); setBooks(b.data ?? []); setSpikes(c.data ?? []); setAwards(d.data ?? []); setInq(e.data ?? []);
-    setApplications(applicationsResult.data ?? []);
+    setApplications(applicationsResult.data ?? []);\n    setAuthorProfiles(authorProfilesResult.data ?? []);
     setCounts({ members: m.count ?? 0, enrolled: en.count ?? 0 });
   }
   useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
@@ -126,6 +126,18 @@ function Admin() {
           <div className="grid gap-3">
             {inq.map((i) => <div key={i.id} className="glass rounded-2xl p-5"><p className="font-semibold">{i.name} <span className="font-normal text-muted-foreground">· {i.email} · {i.program}</span></p>{i.message && <p className="mt-1 text-sm text-muted-foreground">{i.message}</p>}</div>)}
             {!inq.length && <p className="text-muted-foreground">No inquiries yet.</p>}
+          </div>
+        )}
+        {tab === "Spotlight" && (
+          <div className="grid gap-3">
+            <p className="text-sm text-muted-foreground">Manage author Spotlight qualification. Qualification is editorial and does not guarantee an award or paid placement.</p>
+            {authorProfiles.map((profile) => (
+              <article key={profile.id} className="glass flex flex-wrap items-center justify-between gap-4 rounded-xl p-4">
+                <div><p className="font-semibold">{profile.display_name}</p><p className="text-sm text-muted-foreground">{profile.country || "Country not provided"} · {profile.spotlight_qualified_at ? "Spotlight qualified" : "Not qualified"}</p></div>
+                <button className={profile.spotlight_qualified_at ? "btn-glass" : "btn-ink"} onClick={async () => { const value = profile.spotlight_qualified_at ? null : new Date().toISOString(); const { error } = await supabase.from("author_profiles").update({ spotlight_qualified_at: value }).eq("id", profile.id); if (error) alert(error.message); else void load(); }}>{profile.spotlight_qualified_at ? "Remove Spotlight" : "Qualify for Spotlight"}</button>
+              </article>
+            ))}
+            {!authorProfiles.length && <p className="text-muted-foreground">No author profiles available yet.</p>}
           </div>
         )}
         {tab === "Announcements" && (
