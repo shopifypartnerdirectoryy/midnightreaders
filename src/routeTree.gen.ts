@@ -28,12 +28,20 @@ import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
 import { Route as AuthenticatedCommunityJoinRouteImport } from './routes/_authenticated/community.join'
+import { Route as RankingsRouteImport } from './routes/rankings'
+import { Route as AuthorsIdRouteImport } from './routes/authors.$id'
+import { Route as SpotlightRouteImport } from './routes/spotlight'
+import { Route as EventsRouteImport } from './routes/events'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RankingsRoute = RankingsRouteImport.update({ id: '/rankings', path: '/rankings', getParentRoute: () => rootRouteImport } as any)
+const AuthorsIdRoute = AuthorsIdRouteImport.update({ id: '/authors/$id', path: '/authors/$id', getParentRoute: () => rootRouteImport } as any)
+const SpotlightRoute = SpotlightRouteImport.update({ id: '/spotlight', path: '/spotlight', getParentRoute: () => rootRouteImport } as any)
+const EventsRoute = EventsRouteImport.update({ id: '/events', path: '/events', getParentRoute: () => rootRouteImport } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
