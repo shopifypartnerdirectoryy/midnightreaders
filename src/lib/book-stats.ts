@@ -51,8 +51,8 @@ export function rankChallengeBooks<T extends { id: string; title: string }>(
     .sort((a, b) => {
       const left = stats[a.id];
       const right = stats[b.id];
-      return (right?.challenge_comments ?? 0) - (left?.challenge_comments ?? 0)
-        || (right?.engagement_score ?? 0) - (left?.engagement_score ?? 0)
+      return (right?.engagement_score ?? 0) - (left?.engagement_score ?? 0)
+        || (right?.challenge_comments ?? 0) - (left?.challenge_comments ?? 0)
         || (right?.challenge_unique_readers ?? 0) - (left?.challenge_unique_readers ?? 0)
         || a.title.localeCompare(b.title);
     })
