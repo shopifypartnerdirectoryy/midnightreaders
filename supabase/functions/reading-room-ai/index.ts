@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
     const payload = await response.json();
     let post; try { post = JSON.parse(payload.choices?.[0]?.message?.content ?? "{}"); } catch { continue; }
     if (!post.body || typeof post.body !== "string" || post.body.length > 1500 || !["curious_reader","theme_explorer","gentle_skeptic","quote_lover"].includes(post.persona_key)) continue;
-    const { error: insertError } = await supabase.from("reading_room_activity").insert({ book_id:book.id, actor_type:"ai", actor_label:String(post.actor_label ?? "AI Reading Companion").slice(0,80), persona_key:post.persona_key, chapter:Math.max(0,Math.min(Number(book.total_chapters ?? 0),Number(post.chapter ?? 0))), body:post.body, spoiler_level:0 });
+    const { error: insertError } = await supabase.from("reading_room_activity").insert({ book_id:book.id, actor_type:"ai", actor_label:("AI · "+String(post.actor_label ?? "Reading Companion")).slice(0,80), persona_key:post.persona_key, chapter:Math.max(0,Math.min(Number(book.total_chapters ?? 0),Number(post.chapter ?? 0))), body:post.body, spoiler_level:0 });
     results.push({book_id:book.id,status:insertError?"insert_error":"posted"});
   }
   return new Response(JSON.stringify({ processed:results.length, results }), {headers:{...cors,"Content-Type":"application/json"}});
