@@ -28,12 +28,20 @@ import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
 import { Route as AuthenticatedCommunityJoinRouteImport } from './routes/_authenticated/community.join'
+import { Route as RankingsRouteImport } from './routes/rankings'
+import { Route as AuthorsIdRouteImport } from './routes/authors.$id'
+import { Route as SpotlightRouteImport } from './routes/spotlight'
+import { Route as EventsRouteImport } from './routes/events'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RankingsRoute = RankingsRouteImport.update({ id: '/rankings', path: '/rankings', getParentRoute: () => rootRouteImport } as any)
+const AuthorsIdRoute = AuthorsIdRouteImport.update({ id: '/authors/$id', path: '/authors/$id', getParentRoute: () => rootRouteImport } as any)
+const SpotlightRoute = SpotlightRouteImport.update({ id: '/spotlight', path: '/spotlight', getParentRoute: () => rootRouteImport } as any)
+const EventsRoute = EventsRouteImport.update({ id: '/events', path: '/events', getParentRoute: () => rootRouteImport } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
@@ -126,6 +134,11 @@ const AuthenticatedCommunityJoinRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/rankings': typeof RankingsRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/spotlight': typeof SpotlightRoute
+  '/events': typeof EventsRoute
+
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -146,6 +159,11 @@ export interface FileRoutesByFullPath {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesByTo {
+  '/rankings': typeof RankingsRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/spotlight': typeof SpotlightRoute
+  '/events': typeof EventsRoute
+
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -166,6 +184,11 @@ export interface FileRoutesByTo {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesById {
+  '/rankings': typeof RankingsRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/spotlight': typeof SpotlightRoute
+  '/events': typeof EventsRoute
+
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
@@ -190,6 +213,11 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+
+    | '/rankings'
+    | '/authors/$id'
+    | '/spotlight'
+    | '/events'
     | '/'
     | '/about'
     | '/auth'
@@ -210,6 +238,11 @@ export interface FileRouteTypes {
     | '/community/join'
   fileRoutesByTo: FileRoutesByTo
   to:
+
+    | '/rankings'
+    | '/authors/$id'
+    | '/spotlight'
+    | '/events'
     | '/'
     | '/about'
     | '/auth'
@@ -229,6 +262,11 @@ export interface FileRouteTypes {
     | '/programs'
     | '/community/join'
   id:
+
+    | '/rankings'
+    | '/authors/$id'
+    | '/spotlight'
+    | '/events'
     | '__root__'
     | '/'
     | '/_authenticated'
@@ -252,6 +290,11 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  RankingsRoute: typeof RankingsRoute
+  AuthorsIdRoute: typeof AuthorsIdRoute
+  SpotlightRoute: typeof SpotlightRoute
+  EventsRoute: typeof EventsRoute
+
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
@@ -271,6 +314,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+
+    '/rankings': { id: '/rankings', path: '/rankings', fullPath: '/rankings', preLoaderRoute: typeof RankingsRouteImport, parentRoute: typeof rootRouteImport },
+    '/authors/$id': { id: '/authors/$id', path: '/authors/$id', fullPath: '/authors/$id', preLoaderRoute: typeof AuthorsIdRouteImport, parentRoute: typeof rootRouteImport },
+    '/spotlight': { id: '/spotlight', path: '/spotlight', fullPath: '/spotlight', preLoaderRoute: typeof SpotlightRouteImport, parentRoute: typeof rootRouteImport },
+    '/events': { id: '/events', path: '/events', fullPath: '/events', preLoaderRoute: typeof EventsRouteImport, parentRoute: typeof rootRouteImport },
     '/': {
       id: '/'
       path: '/'
@@ -425,6 +473,11 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+
+  RankingsRoute: RankingsRoute,
+  AuthorsIdRoute: AuthorsIdRoute,
+  SpotlightRoute: SpotlightRoute,
+  EventsRoute: EventsRoute,
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
