@@ -87,7 +87,7 @@ function Awards() {
         </section>
       </div>
 
-      <p className="mt-4 text-xs text-muted-foreground">Scores are derived from the platform’s engagement aggregation. Rankings are subject to moderation and data availability.</p>
+      <div className="mt-4 rounded-xl border border-border/60 p-4 text-sm text-muted-foreground"><p className="font-semibold text-foreground">How rankings are ordered</p><p className="mt-2">Books are sorted by the engagement score returned by the database aggregation, with challenge comments and unique challenge readers used as tie-breakers. Author scores aggregate the scores of their catalogued books. The score formula itself is maintained by the database function and is not independently verified here.</p><p className="mt-2">Rankings can change as records are updated and remain subject to moderation and data availability.</p></div>
 
       <h2 className="mt-14 font-serif text-3xl font-semibold">Awards & Recognition</h2>
       <p className="mt-2 max-w-xl text-sm text-muted-foreground">Editorial awards are decided by MRC based on genuine participation. Paid programs never guarantee an award.</p>
