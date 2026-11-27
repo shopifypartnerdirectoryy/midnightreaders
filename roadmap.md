@@ -18,7 +18,7 @@
 - [x] Compare remaining platform work against the uploaded complete-platform brief; record remaining work in the approved plan
 - [ ] Replace simulated book and community activity with genuine records; remove stale external-brand mention
 - [ ] Add member ratings, written reviews, helpful marks, and review reports
-- [ ] Publish authentic Top 10 Books and Top 10 Authors challenge rankings
+- [x] Publish authentic Top 10 Books and Top 10 Authors challenge rankings (leaderboard UI wired to engagement aggregation; pending live verification)
 - [ ] Complete author profiles and author-controlled submission management
 - [ ] Extend membership review details, history, and approval controls
 - [ ] Add manageable BOTM schedules, challenge milestones, and events
