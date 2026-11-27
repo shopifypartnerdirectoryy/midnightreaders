@@ -134,6 +134,10 @@ const AuthenticatedCommunityJoinRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/events': typeof EventsRoute, 
+  '/spotlight': typeof SpotlightRoute, 
+  '/authors/$id': typeof AuthorsIdRoute, 
+  '/rankings': typeof RankingsRoute, 
   '/events': typeof EventsRoute
   '/spotlight': typeof SpotlightRoute
   '/authors/$id': typeof AuthorsIdRoute
@@ -158,6 +162,10 @@ export interface FileRoutesByFullPath {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesByTo {
+  '/events': typeof EventsRoute, 
+  '/spotlight': typeof SpotlightRoute, 
+  '/authors/$id': typeof AuthorsIdRoute, 
+  '/rankings': typeof RankingsRoute, 
   '/events': typeof EventsRoute
   '/spotlight': typeof SpotlightRoute
   '/authors/$id': typeof AuthorsIdRoute
@@ -182,6 +190,10 @@ export interface FileRoutesByTo {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesById {
+  '/events': typeof EventsRoute, 
+  '/spotlight': typeof SpotlightRoute, 
+  '/authors/$id': typeof AuthorsIdRoute, 
+  '/rankings': typeof RankingsRoute, 
   '/events': typeof EventsRoute
   '/spotlight': typeof SpotlightRoute
   '/authors/$id': typeof AuthorsIdRoute
@@ -271,13 +283,14 @@ export interface FileRouteTypes {
     | '/books/'
     | '/programs/'
     | '/_authenticated/community/join'
+    | '/rankings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  EventsRoute: typeof EventsRoute
-  SpotlightRoute: typeof SpotlightRoute
-  AuthorsIdRoute: typeof AuthorsIdRoute
-  RankingsRoute: typeof RankingsRoute
+  EventsRoute: typeof EventsRoute,
+  SpotlightRoute: typeof SpotlightRoute,
+  AuthorsIdRoute: typeof AuthorsIdRoute,
+  RankingsRoute: typeof RankingsRoute,
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
@@ -455,10 +468,10 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  EventsRoute: EventsRoute
-  SpotlightRoute: SpotlightRoute
-  AuthorsIdRoute: AuthorsIdRoute
-  RankingsRoute: RankingsRoute
+  EventsRoute: EventsRoute,
+  SpotlightRoute: SpotlightRoute,
+  AuthorsIdRoute: AuthorsIdRoute,
+  RankingsRoute: RankingsRoute,
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
