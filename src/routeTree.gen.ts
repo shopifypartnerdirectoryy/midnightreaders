@@ -134,6 +134,10 @@ const AuthenticatedCommunityJoinRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/events': typeof EventsRoute
+  '/spotlight': typeof SpotlightRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/rankings': typeof RankingsRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -154,6 +158,10 @@ export interface FileRoutesByFullPath {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesByTo {
+  '/events': typeof EventsRoute
+  '/spotlight': typeof SpotlightRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/rankings': typeof RankingsRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
@@ -174,6 +182,10 @@ export interface FileRoutesByTo {
   '/community/join': typeof AuthenticatedCommunityJoinRoute
 }
 export interface FileRoutesById {
+  '/events': typeof EventsRoute
+  '/spotlight': typeof SpotlightRoute
+  '/authors/$id': typeof AuthorsIdRoute
+  '/rankings': typeof RankingsRoute
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
@@ -198,6 +210,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/rankings'
     | '/'
     | '/about'
     | '/auth'
@@ -218,6 +231,7 @@ export interface FileRouteTypes {
     | '/community/join'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/rankings'
     | '/'
     | '/about'
     | '/auth'
@@ -260,6 +274,10 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  EventsRoute: typeof EventsRoute
+  SpotlightRoute: typeof SpotlightRoute
+  AuthorsIdRoute: typeof AuthorsIdRoute
+  RankingsRoute: typeof RankingsRoute
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
@@ -279,6 +297,10 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/rankings': { id: '/rankings', path: '/rankings', fullPath: '/rankings', preLoaderRoute: typeof RankingsRouteImport, parentRoute: typeof rootRouteImport },
+    '/authors/$id': { id: '/authors/$id', path: '/authors/$id', fullPath: '/authors/$id', preLoaderRoute: typeof AuthorsIdRouteImport, parentRoute: typeof rootRouteImport },
+    '/spotlight': { id: '/spotlight', path: '/spotlight', fullPath: '/spotlight', preLoaderRoute: typeof SpotlightRouteImport, parentRoute: typeof rootRouteImport },
+    '/events': { id: '/events', path: '/events', fullPath: '/events', preLoaderRoute: typeof EventsRouteImport, parentRoute: typeof rootRouteImport },
     '/': {
       id: '/'
       path: '/'
@@ -433,6 +455,10 @@ const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  EventsRoute: EventsRoute
+  SpotlightRoute: SpotlightRoute
+  AuthorsIdRoute: AuthorsIdRoute
+  RankingsRoute: RankingsRoute
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
