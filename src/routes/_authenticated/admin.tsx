@@ -20,7 +20,8 @@ function Admin() {
   const [awards, setAwards] = useState<Tables<"awards">[]>([]);
   const [inq, setInq] = useState<Tables<"inquiries">[]>([]);
   const [applications, setApplications] = useState<Tables<"community_applications">[]>([]);
-  const [counts, setCounts] = useState({ members: 0, enrolled: 0 });\n  const [authorProfiles, setAuthorProfiles] = useState<Tables<"author_profiles">[]>([]);
+  const [counts, setCounts] = useState({ members: 0, enrolled: 0 });
+  const [authorProfiles, setAuthorProfiles] = useState<Tables<"author_profiles">[]>([]);
 
   async function load() {
     const [a, b, c, d, e, m, en, applicationsResult, authorProfilesResult] = await Promise.all([
@@ -31,10 +32,12 @@ function Admin() {
       supabase.from("inquiries").select("*").order("created_at", { ascending: false }),
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("challenge_enrollments").select("user_id", { count: "exact", head: true }),
-      supabase.from("community_applications").select("*").order("created_at", { ascending: false }),\n      supabase.from("author_profiles").select("*").order("display_name"),
+      supabase.from("community_applications").select("*").order("created_at", { ascending: false }),
+      supabase.from("author_profiles").select("*").order("display_name"),
     ]);
     setSubs(a.data ?? []); setBooks(b.data ?? []); setSpikes(c.data ?? []); setAwards(d.data ?? []); setInq(e.data ?? []);
-    setApplications(applicationsResult.data ?? []);\n    setAuthorProfiles(authorProfilesResult.data ?? []);
+    setApplications(applicationsResult.data ?? []);
+    setAuthorProfiles(authorProfilesResult.data ?? []);
     setCounts({ members: m.count ?? 0, enrolled: en.count ?? 0 });
   }
   useEffect(() => { if (isAdmin) void load(); }, [isAdmin]);
